@@ -345,6 +345,7 @@
                 <button id="btn-bak3" class="btn-level" onclick="changeBak(3)">PEL. 3</button>
             </div>
 
+            <!-- Kad Putih Dalaman -->
             <div class="game-card">
                 
                 <div class="header-info">
@@ -356,40 +357,35 @@
                     <div class="timer-progress" id="timer-bar"></div>
                 </div>
 
-                <!-- Kotak Paparan Emoji Soalan -->
-                <!-- Bahagian Soalan & Kotak Jawapan Dinamik -->
+                <!-- Bahagian Soalan & Kotak Jawapan Dinamik (Disatukan Tanpa Pertindihan) -->
                 <div class="question-box">
                     <div id="question-emoji" class="question-emoji">🪵</div>
                     <p class="instruction-small">Sentuh abjad untuk mengeja</p>
-                    
-                    <!-- SUNTIK KOD INI DI SINI -->
                     <div class="slots-container" id="slots-container"></div>
                 </div>
 
+            </div> <!-- Penutup game-card -->
+        </div> <!-- Penutup game-container -->
 
-            <!-- Tempat Kosong Huruf Ejaan -->
-                <div class="slots-container" id="slots-container"></div>
-                <div class="leaderboard-container">
-                    <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
-                    <ul class="leaderboard-list">
-                    <li class="leaderboard-item"><span class="rank">1.</span> Ali<span>120 mata</span></li>
-                    <li class="leaderboard-item"><span class="rank">2.</span> Siti<span>95 mata</span></li>
-                    <li class="leaderboard-item"><span class="rank">3.</span> Ahmad<span>80 mata</span></li>
-                    </ul>
-                </div>
+        <!-- Pilihan Papan Kekunci Abjad Biru Luar -->
+        <div class="options-section" id="options-container"></div>
 
+        <!-- Bahagian Teks Bawah Bingkai -->
+        <div class="bottom-info-section">
+            <h2 class="main-instruction-title">MARI MENGEJA</h2>
+            <p class="main-instruction-desc">Lengkapkan perkataan dengan<br>huruf yang betul!</p>
         </div>
-    </div>
 
-    <!-- Pilihan Papan Kekunci Abjad Biru Luar -->
-    <div class="options-section" id="options-container"></div>
+    </div> <!-- Penutup pink-frame -->
 
-    <!-- Bahagian Teks Bawah Bingkai -->
-    <div class="bottom-info-section">
-        <h2 class="main-instruction-title">MARI MENGEJA</h2>
-        <p class="main-instruction-desc">Lengkapkan perkataan dengan<br>huruf yang betul!</p>
+    <!-- Papan Pendahulu (Diletakkan di luar secara kemas pada bahagian kanan/bawah) -->
+    <div class="leaderboard-container">
+        <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
+        <ul class="leaderboard-list" id="leaderboard-list">
+            <!-- Data dinamik akan dimasukkan melalui JavaScript, senarai statik dibuang -->
+        </ul>
     </div>
-</div>
+</div> <!-- Penutup main-wrapper -->
 
 <!-- Popup Notifikasi -->
 <div class="modal-overlay" id="custom-modal">
@@ -400,7 +396,8 @@
     </div>
 </div>
 
-     <!-- Papan Pendahulu -->
+</body>
+
    
 
 <script>
