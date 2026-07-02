@@ -47,21 +47,21 @@
             position: relative;
         }
 
-        /* --- BAHAGIAN PEMILIH BABAK --- */
+        /* --- BAHAGIAN PEMILIH BABAK (Disusun semula ke bentuk grid 3 lajur) --- */
         .level-select-container {
             margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
 
         .btn-level {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
-            padding: 8px 15px;
+            padding: 6px 0;
             border: 2px solid #4a148c;
-            border-radius: 20px;
+            border-radius: 15px;
             background-color: white;
             color: #4a148c;
             cursor: pointer;
@@ -81,6 +81,7 @@
             font-weight: bold;
             font-size: 14px;
             margin-bottom: 10px;
+            margin-top: 5px;
         }
 
         .lives {
@@ -134,7 +135,7 @@
             font-size: 70px;
             font-weight: bold;
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            color: #4a148c; /* Dipastikan warna ungu pekat dan jelas */
+            color: #4a148c;
         }
 
         /* --- BAHAGIAN BUTANG PILIHAN --- */
@@ -148,7 +149,7 @@
 
         .btn-option {
             background-color: #4a148c;
-            color: #ffffff !important; /* Dipaksa warna putih terang */
+            color: #ffffff !important;
             border: none;
             border-radius: 15px;
             padding: 10px 0;
@@ -294,14 +295,14 @@
     <div class="game-container">
         <div class="game-card">
             
-            <!-- Menu Pilihan Babak -->
+            <!-- Menu Pilihan Babak (Sehingga BAK 6) -->
             <div class="level-select-container">
                 <button id="btn-bak1" class="btn-level active" onclick="changeBak(1)">BAK 1</button>
                 <button id="btn-bak2" class="btn-level" onclick="changeBak(2)">BAK 2</button>
                 <button id="btn-bak3" class="btn-level" onclick="changeBak(3)">BAK 3</button>
                 <button id="btn-bak4" class="btn-level" onclick="changeBak(4)">BAK 4</button>
                 <button id="btn-bak5" class="btn-level" onclick="changeBak(5)">BAK 5</button>
-                 <button id="btn-bak6" class="btn-level" onclick="changeBak(6)">BAK 6</button>
+                <button id="btn-bak6" class="btn-level" onclick="changeBak(6)">BAK 6</button>
             </div>
 
             <div class="header-info">
@@ -320,7 +321,7 @@
             <!-- Kotak Paparan Huruf Soalan -->
             <div class="shadow-box" id="target-letter">-</div>
 
-            <!-- Pilihan Jawapan -->
+            <!-- Pilihan Jawapan (Sentiasa kekal 6 pilihan) -->
             <div class="options-section" id="options-container"></div>
 
             <div class="instruction-section">
@@ -334,29 +335,19 @@
     <div class="leaderboard-container">
         <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
         <ul class="leaderboard-list">
-            
+            <li class="leaderboard-item"><span class="rank">1.</span> Ali<span>120 mata</span></li>
+            <li class="leaderboard-item"><span class="rank">2.</span> Siti<span>95 mata</span></li>
         </ul>
     </div>
-</div>
 
-<!-- Struktur Popup Tersuai -->
-<div class="modal-overlay" id="custom-modal">
-    <div class="modal-box">
-        <div class="modal-title" id="modal-title">Tajuk</div>
-        <div class="modal-desc" id="modal-desc">Mesej kandungan di sini...</div>
-        <button class="btn-modal" onclick="closeModal()">Teruskan</button>
-    </div>
-</div>
-
-<script>
-
-    // --- DATA PERMAINAN ---
+    <script>
+        // --- DATA PERMAINAN (Mengikut Kumpulan Huruf Anda) ---
 const poolBak1 = ["a", "i", "u", "b", "n"];
 const poolBak2 = ["a", "i", "u", "b", "n", "m", "s", "k"];
 const poolBak3 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y"];
-const poolBak4 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r"];  
-const poolBak5 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j" "w", "z"];
-const poolBak6 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j" "w", "z", "v", "o", "e"];
+const poolBak4 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r"];
+const poolBak5 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j", "w", "z"]; // Dibetulkan koma tertinggal
+const poolBak6 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j", "w", "z", "v", "o", "e"]; // Dibetulkan koma tertinggal
 const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
 let currentPool = poolBak1;
 let currentBak = 1;
@@ -379,33 +370,37 @@ const modalDesc = document.getElementById('modal-desc');
 // --- LOGIK UTAMA ---
 function changeBak(bakNumber) {
 currentBak = bakNumber;
-if (bakNumber === 1) {
-currentPool = poolBak1;
-document.getElementById('btn-bak1').classList.add('active');
-document.getElementById('btn-bak2').classList.remove('active');
-} else {
-currentPool = poolBak2;
-document.getElementById('btn-bak2').classList.add('active');
-document.getElementById('btn-bak1').classList.remove('active');
+// Buang status aktif lama daripada semua butang babak
+for (let i = 1; i <= 6; i++) {
+document.getElementById('btn-bak' + i).classList.remove('active');
 }
+// Setkan status aktif pada butang baharu
+document.getElementById('btn-bak' + bakNumber).classList.add('active');
+// Tukar kumpulan huruf berdasarkan babak aktif
+if (bakNumber === 1) currentPool = poolBak1;
+else if (bakNumber === 2) currentPool = poolBak2;
+else if (bakNumber === 3) currentPool = poolBak3;
+else if (bakNumber === 4) currentPool = poolBak4;
+else if (bakNumber === 5) currentPool = poolBak5;
+else if (bakNumber === 6) currentPool = poolBak6;
 resetGame();
 }
 function generateNewQuestion() {
 if (timer) clearInterval(timer);
-// 1. Ambil huruf soalan mengikut sekatan Babak (Pool)
+// 1. Ambil huruf soalan mengikut sekatan Babak semasa
 targetLetter = currentPool[Math.floor(Math.random() * currentPool.length)];
 targetLetterDisplay.textContent = targetLetter;
-// 2. Sediakan set jawapan (Mesti ada jawapan betul)
+// 2. Sediakan set jawapan dan masukkan jawapan yang betul
 let options = new Set();
 options.add(targetLetter);
-// 3. Lengkapkan pilihan dengan huruf rawak A-Z sehingga cukup 6 butang
+// 3. Lengkapkan jawapan dengan huruf a-z rawak sehingga cukup 6 butang
 while (options.size < 6) {
 let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
 options.add(randomLetter);
 }
 // 4. Rawakkan kedudukan susunan huruf
 let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
-// 5. Kosongkan kontena lama dan suntung butang baharu dengan teks yang jelas
+// 5. Kosongkan kontena lama dan masukkan 6 butang jawapan baharu
 optionsContainer.innerHTML = '';
 shuffledOptions.forEach(letter => {
 const btn = document.createElement('button');
@@ -475,11 +470,10 @@ if (onModalConfirm) {
 onModalConfirm();
 }
 }
-// Mengaktifkan permainan sebaik sahaja skrin selesai dimuatkan sepenuhnya
+// Mengaktifkan permainan sebaik sahaja fail dimuatkan
 window.onload = function() {
 generateNewQuestion();
 };
 
 
-
-</script>
+    </script>
