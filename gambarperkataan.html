@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Bina Perkataan Dengan Gambar</title>
+    <title>Game Bina Perkataan Dengan Emoji</title>
     <style>
         /* --- GAYA ASAS & REKA LETAK --- */
         body {
@@ -121,7 +121,7 @@
             display: inline-block;
         }
 
-        /* Kotak Soalan Ditambah Sokongan Gambar */
+        /* Kotak Soalan Ditambah Sokongan Emoji */
         .shadow-box {
             width: 100%;
             min-height: 160px;
@@ -137,13 +137,11 @@
             box-sizing: border-box;
         }
 
-        /* Gaya Ukuran Gambar Soalan */
-        .question-image {
-            width: 90px;
-            height: 90px;
-            object-fit: contain;
+        /* Gaya Paparan Emoji */
+        .question-emoji {
+            font-size: 65px;
             margin-bottom: 10px;
-            border-radius: 10px;
+            line-height: 1;
         }
 
         .sound-text {
@@ -337,9 +335,9 @@
                 <div class="bubble-text">Gabungkan bunyi ini!</div>
             </div>
 
-            <!-- Kotak Paparan Gambar + Gabungan Bunyi -->
+            <!-- Kotak Paparan Emoji + Gabungan Bunyi -->
             <div class="shadow-box">
-                <img id="question-img" class="question-image" src="" alt="Sila letak fail gambar di folder yang sama">
+                <div id="question-emoji" class="question-emoji">🧱</div>
                 <div id="sound-question" class="sound-text">- + -</div>
                 <div class="hint-text">Menjadi perkataan apa?</div>
             </div>
@@ -350,6 +348,10 @@
             <div class="instruction-section">
                 <div class="instruction-title">CARA BERMAIN</div>
                 <div class="instruction-desc">Pilih perkataan lengkap yang betul hasil daripada gabungan bunyi di atas!</div>
+            </div>
+        </div>
+    </div>
+
 
                  <div class="leaderboard-container">
         <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
@@ -360,38 +362,38 @@
         </ul>
     </div>
 </div>
+    
 <script>
-  // --- DATA PERKATAAN + PAUTAN GAMBAR ---
-// Tukar nama fail imej mengikut nama fail gambar sebenar yang anda simpan di dalam folder game anda
+// --- DATA PERKATAAN + EMOJI ---
 const level1Data = [
-{ question: "ba + tu", answer: "batu", image: "batu.png" },
-{ question: "ce + ri", answer: "ceri", image: "ceri.png" },
-{ question: "ja + la", answer: "jala", image: "jala.png" },
-{ question: "pa + su", answer: "pasu", image: "pasu.png" },
-{ question: "ro + ti", answer: "roti", image: "roti.png" },
-{ question: "su + su", answer: "susu", image: "susu.png" },
-{ question: "fe + ri", answer: "feri", image: "feri.png" },
-{ question: "gu + la", answer: "gula", image: "gula.png" }
-];
+{ question: "ba + tu", answer: "batu", emoji: "🧱" },
+{ question: "ce + ri", answer: "ceri", emoji: "🍒" },
+{ question: "ja + la", answer: "jala", emoji: "🕸️" },
+{ question: "pa + su", answer: "pasu", emoji: "🏺" },
+{ question: "ro + ti", answer: "roti", emoji: "🍞" },
+{ question: "su + su", answer: "susu", emoji: "🥛" },
+{ question: "fe + ri", answer: "feri", emoji: "🚢" },
+{ question: "gu + la", answer: "gula", emoji: "🍬" }
+]; [1]
 const level2Data = [
-{ question: "ke + re + ta", answer: "kereta", image: "kereta.png" },
-{ question: "to + ma + to", answer: "tomato", image: "tomato.png" },
-{ question: "bo + ne + ka", answer: "boneka", image: "boneka.png" },
-{ question: "ka + me + ra", answer: "kamera", image: "kamera.png" },
-{ question: "ke + la + pa", answer: "kelapa", image: "kelapa.png" },
-{ question: "ke + ru + si", answer: "kerusi", image: "kerusi.png" },
-{ question: "re + ba + na", answer: "rebana", image: "rebana.png" },
-{ question: "se + pa + tu", answer: "sepatu", image: "sepatu.png" }
+{ question: "ke + re + ta", answer: "kereta", emoji: "🚗" },
+{ question: "to + ma + to", answer: "tomato", emoji: "🍅" },
+{ question: "bo + ne + ka", answer: "boneka", emoji: "🧸" },
+{ question: "ka + me + ra", answer: "kamera", emoji: "📷" },
+{ question: "ke + la + pa", answer: "kelapa", emoji: "🥥" },
+{ question: "ke + ru + si", answer: "kerusi", emoji: "🪑" },
+{ question: "re + ba + na", answer: "rebana", emoji: "🥁" },
+{ question: "se + pa + tu", answer: "sepatu", emoji: "👟" }
 ];
 const level3Data = [
-{ question: "ban + tal", answer: "bantal", image: "bantal.png" },
-{ question: "cin + cin", answer: "cincin", image: "cincin.png" },
-{ question: "dom + pet", answer: "dompet", image: "dompet.png" },
-{ question: "gar + pu", answer: "garpu", image: "garpu.png" },
-{ question: "ker + tas", answer: "kertas", image: "kertas.png" },
-{ question: "pen + sel", answer: "pensel", image: "pensel.png" },
-{ question: "ci + cak", answer: "cicak", image: "cicak.png" },
-{ question: "ka + tak", answer: "katak", image: "katak.png" }
+{ question: "ban + tal", answer: "bantal", emoji: "🛏️" },
+{ question: "cin + cin", answer: "cincin", emoji: "💍" },
+{ question: "dom + pet", answer: "dompet", emoji: "👛" },
+{ question: "gar + pu", answer: "garpu", emoji: "🍴" },
+{ question: "ker + tas", answer: "kertas", emoji: "📄" },
+{ question: "pen + sel", answer: "pensel", emoji: "✏️" },
+{ question: "ci + cak", answer: "cicak", emoji: "🦎" },
+{ question: "ka + tak", answer: "katak", emoji: "🐸" }
 ];
 const allAnswers = [...level1Data, ...level2Data, ...level3Data].map(item => item.answer);
 let currentLevelData = level1Data;
@@ -406,7 +408,7 @@ let onModalConfirm = null;
 // ELEMEN DOM
 const scoreDisplay = document.getElementById('score');
 const livesDisplay = document.getElementById('lives');
-const questionImgDisplay = document.getElementById('question-img');
+const questionEmojiDisplay = document.getElementById('question-emoji');
 const soundQuestionDisplay = document.getElementById('sound-question');
 const optionsContainer = document.getElementById('options-container');
 const timerBar = document.getElementById('timer-bar');
@@ -428,18 +430,15 @@ resetGame();
 // --- FUNGSI JANA SOALAN BARU ---
 function generateNewQuestion() {
 if (timer) clearInterval(timer);
-// Pilih satu objek soalan rawak
 currentQuestionItem = currentLevelData[Math.floor(Math.random() * currentLevelData.length)];
-// Kemas kini Paparan Teks Bunyi & Gambar
 soundQuestionDisplay.textContent = currentQuestionItem.question;
-questionImgDisplay.src = currentQuestionItem.image; // <--- MENETAPKAN GAMBAR BARU
-// Sediakan 6 pilihan jawapan
+questionEmojiDisplay.textContent = currentQuestionItem.emoji; // <--- MENETAPKAN EMOJI BARU
 let options = new Set();
 options.add(currentQuestionItem.answer);
 while (options.size < 6) {
 let randomWrongAnswer = allAnswers[Math.floor(Math.random() * allAnswers.length)];
 options.add(randomWrongAnswer);
-}
+} [1]
 let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
 optionsContainer.innerHTML = '';
 shuffledOptions.forEach(word => {
@@ -478,9 +477,9 @@ let hearts = '';
 for (let i = 0; i < lives; i++) {
 hearts += '❤️';
 }
-livesDisplay.textContent = hearts;
+livesDisplay.textContent = hearts; [1]
 if (lives > 0) {
-showModal('Alamak! ❌', 'Gabungan bunyi atau gambar kurang tepat. Sila cuba lagi!', function() {
+showModal('Alamak! ❌', 'Gabungan bunyi atau emoji kurang tepat. Sila cuba lagi!', function() {
 generateNewQuestion();
 });
 } else {
@@ -488,7 +487,7 @@ showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score
 resetGame();
 });
 }
-}
+} [1]
 function resetGame() {
 score = 0;
 lives = 3;
@@ -508,11 +507,9 @@ customModal.classList.remove('active');
 if (onModalConfirm) {
 onModalConfirm();
 }
-}
+} 
 // Jalankan secara automatik
 generateNewQuestion();
-
-
 
 
 </script>
