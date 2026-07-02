@@ -349,6 +349,8 @@
 
 <!-- Struktur Popup Tersuai -->
 
+<script>
+// --- PENGISYTIHARAN DATA PERMAINAN ---
 const poolBak1 = ["A", "I", "U", "B", "N"];
 const poolBak2 = ["A", "I", "U", "B", "N", "M", "S", "K"];
 let currentPool = poolBak1;
@@ -384,10 +386,12 @@ document.getElementById('btn-bak1').classList.remove('active');
 resetGame();
 }
 function generateNewQuestion() {
+// Ambil huruf soalan secara rawak daripada pool aktif
 targetLetter = currentPool[Math.floor(Math.random() * currentPool.length)];
 targetLetterDisplay.textContent = targetLetter;
 let options = new Set();
 options.add(targetLetter);
+// Maksimum butang pilihan mengikut saiz huruf pool (Maksimum 6)
 let maxButtons = Math.min(6, currentPool.length);
 while (options.size < maxButtons) {
 let randomLetter = currentPool[Math.floor(Math.random() * currentPool.length)];
@@ -463,7 +467,8 @@ if (onModalConfirm) {
 onModalConfirm();
 }
 }
-// Mula permainan secara automatik sewaktu fail dibuka
+// Jalankan permainan buat kali pertama secara automatik
 generateNewQuestion();
+
 
 </script>
