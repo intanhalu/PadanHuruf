@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mari Mengeja</title>
     <style>
-        /* --- GAYA ASAS & BINGKAI MERAH JAMBU --- */
+        /* --- GAYA ASAS & BINGKAI --- */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #fce4ec;
@@ -87,9 +87,10 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
+            box-sizing: border-box;
         }
 
-        /* MAKLUMAT SKOR & NYAWA */
+        /* MAKLUMAT HEADER */
         .header-info {
             display: flex;
             justify-content: space-between;
@@ -120,13 +121,14 @@
             background-color: #d32f2f;
         }
 
-        /* --- BAHAGIAN GAMBAR SOALAN --- */
+        /* --- BAHAGIAN SOALAN --- */
         .question-box {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             margin-bottom: 10px;
+            width: 100%;
         }
 
         .question-emoji {
@@ -138,10 +140,10 @@
         .instruction-small {
             color: #bdc3c7;
             font-size: 11px;
-            margin: 0;
+            margin: 0 0 10px 0;
         }
 
-        /* --- RUANG JAWAPAN (SLOTS) --- */
+        /* --- RUANG JAWAPAN TEMPAT KOSONG --- */
         .slots-container {
             display: flex;
             gap: 6px;
@@ -167,10 +169,10 @@
             align-items: center;
         }
 
-        /* --- BAHAGian BUTANG ABJAD BIRU --- */
+        /* --- BAHAGIAN BUTANG ABJAD BIRU --- */
         .options-section {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Ditukar ke 3 lajur supaya muat 6 abjad dengan kemas */
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             width: 100%;
             margin-top: 15px;
@@ -227,7 +229,7 @@
             line-height: 1.4;
         }
 
-        /* --- PAPAN PENDAHULU (LEADERBOARD) --- */
+        /* --- LEADERBOARD --- */
         .leaderboard-container {
             width: 340px;
             background-color: #ffffff;
@@ -357,6 +359,8 @@
                     <div class="timer-progress" id="timer-bar"></div>
                 </div>
 
+                <!-- Bahagian Soalan & Kotak Jawapan Dinamik -->
+
                 <!-- Bahagian Soalan & Kotak Jawapan Dinamik (Disatukan Tanpa Pertindihan) -->
                 <div class="question-box">
                     <div id="question-emoji" class="question-emoji">🪵</div>
@@ -401,7 +405,7 @@
    
 
 <script>
-    // --- UTUTAN DATA SOALAN PERKATAAN ---
+   // --- UTUTAN DATA SOALAN PERKATAAN ---
 const babak1Data = [
 { word: "kayu", emoji: "🪵" },
 { word: "batu", emoji: "🧱" },
@@ -469,7 +473,6 @@ if (timer) clearInterval(timer);
 currentItem = currentPool[Math.floor(Math.random() * currentPool.length)];
 questionEmojiDisplay.textContent = currentItem.emoji;
 currentSpelling = [];
-// Penjanaan slot jawapan di bawah teks arahan
 slotsContainer.innerHTML = '';
 for (let i = 0; i < currentItem.word.length; i++) {
 const slot = document.createElement('div');
@@ -594,6 +597,7 @@ onModalConfirm();
 }
 renderLeaderboard();
 generateNewQuestion();
+
 
 
 </script>
