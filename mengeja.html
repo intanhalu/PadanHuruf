@@ -301,65 +301,86 @@
             slotsContainer.appendChild(slot);
         }
 
-        // 3. Himpunkan huruf jawapan betul + huruf gangguan rawak (Cukup 4 butang sebaris)
-        let letterPool = currentItem.word.split('');
-        while (letterPool.length < 4) {
+        // 3. Gunakan Set untuk mengumpul huruf unik bagi butang pilihan (Fix tulisan berulang & tetapkan 6 pilihan)
+        let optionsSet = new Set(currentItem.word.split(''));
+
+        // Lengkapkan butang jawapan dengan abjad rawak sehingga cukup 6 pilihan agar grid kelihatan penuh dan cantik
+        while (optionsSet.size < 6) {
             let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
-            if (!letterPool.includes(randomLetter)) {
-                letterPool.push(randomLetter);
-            }
+            optionsSet.add(randomLetter);
         }
 
         // 4. Rawakkan susunan kedudukan huruf pilihan
-        let shuffledLetters = letterPool.sort(() => Math.random() - 0.5);
+        let shuffledLetters = Array.from(optionsSet).sort(() => Math.random() - 0.5);
 
         // 5. Jana butang abjad biru
         optionsContainer.innerHTML = '';
         shuffledLetters.forEach((letter) => {
             const btn = document.createElement('button');
             btn.classList.add('btn-option', 'btn-blue-option');
-            btn.textContent = letter.toUpperCase(); // Papar huruf besar seperti imej
+            btn.textContent = letter.toUpperCase(); // Papar huruf besar
+            btn.dataset.letter = letter; // Simpan huruf kecil asal untuk semakan logik
             btn.onclick = function() { checkLetterInput(letter, btn); };
             optionsContainer.appendChild(btn);
         });
     }
 
     // --- FUNGSI SEMAK JAWAPAN KETIKAN ---
-function checkLetterInput(letter, buttonElement) {
-let currentIndex = currentSpelling.length;
-let expectedLetter = currentItem.word[currentIndex];
-// Jika huruf yang ditekan betul mengikut urutan ejaan
-if (letter === expectedLetter) {
-currentSpelling.push(letter);
-document.getElementById('slot-' + currentIndex).textContent = letter.toUpperCase();
-buttonElement.disabled = true;
-// Jika ejaan telah lengkap sepenuhnya
-if (currentSpelling.length === currentItem.word.length) {
-showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toUpperCase() + '".', function() {
-generateNewQuestion();
-});
-}
-} else {
-// Jika tersalah tekan abjad
-showModal('Alamak! ❌', 'Abjad itu tidak betul untuk urutan ejaan ini. Cuba lagi!', function() {
-generateNewQuestion();
-});
-}
-}
-// --- PENGENDALIAN MODAL POPUP ---
-function showModal(title, desc, callback) {
-modalTitle.textContent = title;
-modalDesc.textContent = desc;
-onModalConfirm = callback;
-customModal.classList.add('active');
-}
-function closeModal() {
-customModal.classList.remove('active');
-if (onModalConfirm) {
-onModalConfirm();
-}
-}
-// Jalankan permainan buat kali pertama secara automatik
-generateNewQuestion();
+    function checkLetterInput(letter, buttonElement) {
+        let currentIndex = currentSpelling.length;
+        let expectedLetter = currentItem.word[currentIndex];
 
+        // Jika huruf yang ditekan betul mengikut urutan ejaan semasa
+        if (letter === expectedLetter) {
+            currentSpelling.push(letter);
+            document.getElementById('slot-' + currentIndex).textContent = letter.toUpperCase();
+            
+            // Kira baki keperluan huruf tersebut dalam ejaan yang belum diselesaikan
+            let totalNeeded = currentItem.word.split('').filter(l => l === letter).length;
+            let currentTyped = currentSpelling.filter(l => l === letter).length;
+            
+            // Hanya kunci butang (disabled) jika huruf itu tidak diperlukan lagi untuk ejaan seterusnya
+            if (currentTyped >= totalNeeded) {
+                buttonElement.disabled = true;
+            }
+
+            // Jika ejaan telah lengkap sepenuhnya
+            if (currentSpelling.length === currentItem.word.length) {
+                showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toUpperCase() + '".', function() {
+                    generateNewQuestion();
+                });
+            }
+        } else {
+            // Jika tersalah tekan abjad, tetapkan semula ejaan perkataan semasa untuk peluang kedua
+            showModal('Alamak! ❌', 'Abjad itu tidak betul untuk urutan ejaan ini. Cuba lagi!', function() {
+                // Reset ejaan soalan sedia ada tanpa tukar soalan baharu
+                currentSpelling = [];
+                for (let i = 0; i < currentItem.word.length; i++) {
+                    document.getElementById('slot-' + i).textContent = '';
+                }
+                // Aktifkan semula semua butang pilihan abjad
+                const buttons = optionsContainer.querySelectorAll('button');
+                buttons.forEach(btn => btn.disabled = false);
+            });
+        }
+    }
+
+    // --- PENGENDALIAN MODAL POPUP ---
+    function showModal(title, desc, callback) {
+        modalTitle.textContent = title;
+        modalDesc.textContent = desc;
+        onModalConfirm = callback;
+        customModal.classList.add('active');
+    }
+
+    function closeModal() {
+        customModal.classList.remove('active');
+        if (onModalConfirm) {
+            onModalConfirm();
+        }
+    }
+
+    // Jalankan permainan buat kali pertama secara automatik selepas skrin siap sedia
+    generateNewQuestion();
 </script>
+
