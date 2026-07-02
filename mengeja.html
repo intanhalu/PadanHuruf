@@ -15,6 +15,18 @@
             min-height: 100vh;
             margin: 0;
             user-select: none;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         /* Bingkai Merah Jambu Luar (Pink Frame) */
@@ -39,23 +51,73 @@
             box-shadow: inset 0 -5px 0 rgba(0,0,0,0.15);
         }
 
+        /* --- BAHAGIAN PEMILIH BABAK --- */
+        .level-select-container {
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .btn-level {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 6px 0;
+            border: 2px solid #2979ff;
+            border-radius: 12px;
+            background-color: white;
+            color: #2979ff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-level.active {
+            background-color: #2979ff;
+            color: white;
+        }
+
         /* Kad Putih Dalaman */
         .game-card {
             background-color: #ffffff;
             border-radius: 20px;
-            padding: 20px 15px;
-            min-height: 260px;
+            padding: 15px 12px;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
         }
 
-        .header-title {
-            color: #7f8c8d;
-            font-size: 13px;
+        /* MAKLUMAT SKOR & NYAWA */
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            color: #27ae60;
             font-weight: bold;
-            margin: 0 0 10px 0;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .lives {
+            color: #d32f2f;
+        }
+
+        /* BAR PEMASA */
+        .timer-bar {
+            width: 100%;
+            background-color: #f1f2f6;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            width: 100%;
+            height: 100%;
+            background-color: #d32f2f;
         }
 
         /* --- BAHAGIAN GAMBAR SOALAN --- */
@@ -64,7 +126,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .question-emoji {
@@ -75,26 +137,28 @@
 
         .instruction-small {
             color: #bdc3c7;
-            font-size: 12px;
+            font-size: 11px;
             margin: 0;
         }
 
         /* --- RUANG JAWAPAN (SLOTS) --- */
         .slots-container {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             min-height: 40px;
+            width: 100%;
+            flex-wrap: wrap;
         }
 
         .slot-letter {
-            width: 35px;
-            height: 40px;
+            width: 32px;
+            height: 38px;
             background-color: #f1f2f6;
             border-radius: 8px;
             border: 2px solid #dcdde1;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             font-family: 'Comic Sans MS', sans-serif;
             color: #2c3e50;
@@ -103,13 +167,13 @@
             align-items: center;
         }
 
-        /* --- BAHAGIAN BUTANG ABJAD BIRU --- */
+        /* --- BAHAGian BUTANG ABJAD BIRU --- */
         .options-section {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* Ditukar ke 3 lajur supaya muat 6 abjad dengan kemas */
             gap: 10px;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .btn-blue-option {
@@ -117,7 +181,7 @@
             color: #ffffff !important;
             border: none;
             border-radius: 12px;
-            padding: 12px 0;
+            padding: 10px 0;
             font-size: 24px;
             font-weight: bold;
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
@@ -141,7 +205,7 @@
             opacity: 0.6;
         }
 
-        /* --- TEKS BAWAH (MARI MENCEJA) --- */
+        /* --- TEKS BAWAH --- */
         .bottom-info-section {
             margin-top: 20px;
         }
@@ -161,6 +225,53 @@
             font-weight: bold;
             margin: 0;
             line-height: 1.4;
+        }
+
+        /* --- PAPAN PENDAHULU (LEADERBOARD) --- */
+        .leaderboard-container {
+            width: 340px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            padding: 20px;
+            border: 4px solid #2979ff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+
+        .leaderboard-title {
+            color: #4a148c;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f2f6;
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #ff9f43;
+            margin-right: 10px;
         }
 
         /* --- CUSTOM POPUP MODAL --- */
@@ -220,21 +331,52 @@
 </head>
 <body>
 
-<div class="pink-frame">
-    <!-- Antaramuka Game Hijau -->
-    <div class="game-container">
-        <div class="game-card">
+<div class="main-wrapper">
+    <!-- Bingkai Merah Jambu Luar -->
+    <div class="pink-frame">
+        
+        <!-- Antaramuka Game Hijau -->
+        <div class="game-container">
             
-            <div class="header-title">Pelajaran Mengeja 1</div>
-
-            <!-- Kotak Paparan Emoji Soalan -->
-            <div class="question-box">
-                <div id="question-emoji" class="question-emoji">🪵</div>
-                <p class="instruction-small">Sentuh abjad untuk mengeja</p>
+            <!-- Menu Pilihan Babak -->
+            <div class="level-select-container">
+                <button id="btn-bak1" class="btn-level active" onclick="changeBak(1)">PEL. 1</button>
+                <button id="btn-bak2" class="btn-level" onclick="changeBak(2)">PEL. 2</button>
+                <button id="btn-bak3" class="btn-level" onclick="changeBak(3)">PEL. 3</button>
             </div>
 
+            <div class="game-card">
+                
+                <div class="header-info">
+                    <span>SKOR: <span id="score">0</span></span>
+                    <span class="lives">NYAWA: <span id="lives">❤️❤️❤️</span></span>
+                </div>
+                
+                <div class="timer-bar">
+                    <div class="timer-progress" id="timer-bar"></div>
+                </div>
+
+                <!-- Kotak Paparan Emoji Soalan -->
+                <!-- Bahagian Soalan & Kotak Jawapan Dinamik -->
+                <div class="question-box">
+                    <div id="question-emoji" class="question-emoji">🪵</div>
+                    <p class="instruction-small">Sentuh abjad untuk mengeja</p>
+                    
+                    <!-- SUNTIK KOD INI DI SINI -->
+                    <div class="slots-container" id="slots-container"></div>
+                </div>
+
+
             <!-- Tempat Kosong Huruf Ejaan -->
-            <div class="slots-container" id="slots-container"></div>
+                <div class="slots-container" id="slots-container"></div>
+                <div class="leaderboard-container">
+                    <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
+                    <ul class="leaderboard-list">
+                    <li class="leaderboard-item"><span class="rank">1.</span> Ali<span>120 mata</span></li>
+                    <li class="leaderboard-item"><span class="rank">2.</span> Siti<span>95 mata</span></li>
+                    <li class="leaderboard-item"><span class="rank">3.</span> Ahmad<span>80 mata</span></li>
+                    </ul>
+                </div>
 
         </div>
     </div>
@@ -258,129 +400,204 @@
     </div>
 </div>
 
+     <!-- Papan Pendahulu -->
+   
+
 <script>
-    // --- DATA SOALAN PERKATAAN & EMOJI ---
-    const gameData = [
-        { word: "kayu", emoji: "🪵" },
-        { word: "batu", emoji: "🧱" },
-        { word: "roti", emoji: "🍞" },
-        { word: "gula", emoji: "🍬" },
-        { word: "susu", emoji: "🥛" },
-        { word: "buku", emoji: "📖" },
-        { word: "baju", emoji: "👕" }
-    ];
+    // --- UTUTAN DATA SOALAN PERKATAAN ---
+const babak1Data = [
+{ word: "kayu", emoji: "🪵" },
+{ word: "batu", emoji: "🧱" },
+{ word: "roti", emoji: "🍞" },
+{ word: "gula", emoji: "🍬" },
+{ word: "susu", emoji: "🥛" },
+{ word: "buku", emoji: "📖" },
+{ word: "baju", emoji: "👕" }
+];
+const babak2Data = [
+{ word: "kereta", emoji: "🚗" },
+{ word: "tomato", emoji: "🍅" },
+{ word: "boneka", emoji: "🧸" },
+{ word: "kamera", emoji: "📷" },
+{ word: "kelapa", emoji: "🥥" },
+{ word: "kerusi", emoji: "🪑" }
+];
+const babak3Data = [
+{ word: "bantal", emoji: "🛏️" },
+{ word: "cincin", emoji: "💍" },
+{ word: "dompet", emoji: "👛" },
+{ word: "garpu", emoji: "🍴" },
+{ word: "kertas", emoji: "📄" },
+{ word: "pensel", emoji: "✏️" }
+];
+const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
+let currentPool = babak1Data;
+let currentBak = 1;
+let currentItem = null;
+let currentSpelling = [];
+let score = 0;
+let lives = 3;
+let timer = null;
+let timeLeft = 15;
+const totalTime = 15;
+let onModalConfirm = null;
+let leaderboardData = [
+{ name: "Ali", score: 120 },
+{ name: "Siti", score: 90 },
+{ name: "Ahmad", score: 60 }
+];
+const scoreDisplay = document.getElementById('score');
+const livesDisplay = document.getElementById('lives');
+const questionEmojiDisplay = document.getElementById('question-emoji');
+const slotsContainer = document.getElementById('slots-container');
+const optionsContainer = document.getElementById('options-container');
+const timerBar = document.getElementById('timer-bar');
+const customModal = document.getElementById('custom-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+const leaderboardListDisplay = document.getElementById('leaderboard-list');
+function changeBak(bakNumber) {
+currentBak = bakNumber;
+for (let i = 1; i <= 3; i++) {
+document.getElementById('btn-bak' + i).classList.remove('active');
+}
+document.getElementById('btn-bak' + bakNumber).classList.add('active');
+if (bakNumber === 1) currentPool = babak1Data;
+else if (bakNumber === 2) currentPool = babak2Data;
+else if (bakNumber === 3) currentPool = babak3Data;
+resetGame();
+}
+function generateNewQuestion() {
+if (timer) clearInterval(timer);
+currentItem = currentPool[Math.floor(Math.random() * currentPool.length)];
+questionEmojiDisplay.textContent = currentItem.emoji;
+currentSpelling = [];
+// Penjanaan slot jawapan di bawah teks arahan
+slotsContainer.innerHTML = '';
+for (let i = 0; i < currentItem.word.length; i++) {
+const slot = document.createElement('div');
+slot.classList.add('slot-letter');
+slot.id = 'slot-' + i;
+slot.textContent = '';
+slotsContainer.appendChild(slot);
+}
+let optionsSet = new Set(currentItem.word.split(''));
+while (optionsSet.size < 6) {
+let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
+optionsSet.add(randomLetter);
+}
+let shuffledLetters = Array.from(optionsSet).sort(() => Math.random() - 0.5);
+optionsContainer.innerHTML = '';
+shuffledLetters.forEach((letter) => {
+const btn = document.createElement('button');
+btn.classList.add('btn-option', 'btn-blue-option');
+btn.textContent = letter.toUpperCase();
+btn.onclick = function() { checkLetterInput(letter, btn); };
+optionsContainer.appendChild(btn);
+});
+timeLeft = totalTime;
+timerBar.style.width = '100%';
+timer = setInterval(runTimer, 100);
+}
+function runTimer() {
+timeLeft -= 0.1;
+let percentage = (timeLeft / totalTime) * 100;
+timerBar.style.width = percentage + '%';
+if (timeLeft <= 0) {
+clearInterval(timer);
+handleWrongAnswer('Masa tamat! ⏰');
+}
+}
+function checkLetterInput(letter, buttonElement) {
+let currentIndex = currentSpelling.length;
+let expectedLetter = currentItem.word[currentIndex];
+if (letter === expectedLetter) {
+currentSpelling.push(letter);
+document.getElementById('slot-' + currentIndex).textContent = letter.toUpperCase();
+let totalNeeded = currentItem.word.split('').filter(l => l === letter).length;
+let currentTyped = currentSpelling.filter(l => l === letter).length;
+if (currentTyped >= totalNeeded) {
+buttonElement.disabled = true;
+}
+if (currentSpelling.length === currentItem.word.length) {
+clearInterval(timer);
+score += 15;
+scoreDisplay.textContent = score;
+showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toUpperCase() + '".', function() {
+generateNewQuestion();
+});
+}
+} else {
+clearInterval(timer);
+handleWrongAnswer('Ejaan salah! ❌');
+}
+}
+function handleWrongAnswer(reasonMessage) {
+lives--;
+let hearts = '';
+for (let i = 0; i < lives; i++) {
+hearts += '❤️';
+}
+livesDisplay.textContent = hearts;
+if (lives > 0) {
+showModal(reasonMessage, 'Urutan ejaan kurang tepat. Sila cuba lagi!', function() {
+currentSpelling = [];
+for (let i = 0; i < currentItem.word.length; i++) {
+document.getElementById('slot-' + i).textContent = '';
+}
+const buttons = optionsContainer.querySelectorAll('button');
+buttons.forEach(btn => btn.disabled = false);
+timeLeft = totalTime;
+timerBar.style.width = '100%';
+timer = setInterval(runTimer, 100);
+});
+} else {
+showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
+updateLeaderboard(score);
+resetGame();
+});
+}
+}
+function resetGame() {
+score = 0;
+lives = 3;
+scoreDisplay.textContent = score;
+livesDisplay.textContent = '❤️❤️❤️';
+generateNewQuestion();
+}
+function renderLeaderboard() {
+leaderboardListDisplay.innerHTML = '';
+leaderboardData.sort((a, b) => b.score - a.score);
+leaderboardData.forEach((player, index) => {
+const item = document.createElement('li');
+item.classList.add('leaderboard-item');
+item.innerHTML = <span><span class="rank">${index + 1}.</span> ${player.name}</span> <span>${player.score} mata</span>;
+leaderboardListDisplay.appendChild(item);
+});
+}
+function updateLeaderboard(finalScore) {
+let playerName = prompt("Permainan Tamat! Masukkan nama anda untuk Papan Pendahulu:");
+if (!playerName || playerName.trim() === "") {
+playerName = "Pemain Rawak";
+}
+leaderboardData.push({ name: playerName.trim(), score: finalScore });
+renderLeaderboard();
+}
+function showModal(title, desc, callback) {
+modalTitle.textContent = title;
+modalDesc.textContent = desc;
+onModalConfirm = callback;
+customModal.classList.add('active');
+}
+function closeModal() {
+customModal.classList.remove('active');
+if (onModalConfirm) {
+onModalConfirm();
+}
+}
+renderLeaderboard();
+generateNewQuestion();
 
-    const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
-    
-    let currentItem = null;
-    let currentSpelling = [];
-    let onModalConfirm = null;
 
-    // ELEMEN DOM
-    const questionEmojiDisplay = document.getElementById('question-emoji');
-    const slotsContainer = document.getElementById('slots-container');
-    const optionsContainer = document.getElementById('options-container');
-    const customModal = document.getElementById('custom-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDesc = document.getElementById('modal-desc');
-
-    // --- FUNGSI JANA SOALAN BARU ---
-    function generateNewQuestion() {
-        // 1. Pilih perkataan secara rawak
-        currentItem = gameData[Math.floor(Math.random() * gameData.length)];
-        questionEmojiDisplay.textContent = currentItem.emoji;
-        currentSpelling = [];
-
-        // 2. Bina petak kosong mengikut jumlah huruf perkataan
-        slotsContainer.innerHTML = '';
-        for (let i = 0; i < currentItem.word.length; i++) {
-            const slot = document.createElement('div');
-            slot.classList.add('slot-letter');
-            slot.id = 'slot-' + i;
-            slot.textContent = '';
-            slotsContainer.appendChild(slot);
-        }
-
-        // 3. Gunakan Set untuk mengumpul huruf unik bagi butang pilihan (Fix tulisan berulang & tetapkan 6 pilihan)
-        let optionsSet = new Set(currentItem.word.split(''));
-
-        // Lengkapkan butang jawapan dengan abjad rawak sehingga cukup 6 pilihan agar grid kelihatan penuh dan cantik
-        while (optionsSet.size < 6) {
-            let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
-            optionsSet.add(randomLetter);
-        }
-
-        // 4. Rawakkan susunan kedudukan huruf pilihan
-        let shuffledLetters = Array.from(optionsSet).sort(() => Math.random() - 0.5);
-
-        // 5. Jana butang abjad biru
-        optionsContainer.innerHTML = '';
-        shuffledLetters.forEach((letter) => {
-            const btn = document.createElement('button');
-            btn.classList.add('btn-option', 'btn-blue-option');
-            btn.textContent = letter.toUpperCase(); // Papar huruf besar
-            btn.dataset.letter = letter; // Simpan huruf kecil asal untuk semakan logik
-            btn.onclick = function() { checkLetterInput(letter, btn); };
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    // --- FUNGSI SEMAK JAWAPAN KETIKAN ---
-    function checkLetterInput(letter, buttonElement) {
-        let currentIndex = currentSpelling.length;
-        let expectedLetter = currentItem.word[currentIndex];
-
-        // Jika huruf yang ditekan betul mengikut urutan ejaan semasa
-        if (letter === expectedLetter) {
-            currentSpelling.push(letter);
-            document.getElementById('slot-' + currentIndex).textContent = letter.toUpperCase();
-            
-            // Kira baki keperluan huruf tersebut dalam ejaan yang belum diselesaikan
-            let totalNeeded = currentItem.word.split('').filter(l => l === letter).length;
-            let currentTyped = currentSpelling.filter(l => l === letter).length;
-            
-            // Hanya kunci butang (disabled) jika huruf itu tidak diperlukan lagi untuk ejaan seterusnya
-            if (currentTyped >= totalNeeded) {
-                buttonElement.disabled = true;
-            }
-
-            // Jika ejaan telah lengkap sepenuhnya
-            if (currentSpelling.length === currentItem.word.length) {
-                showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toUpperCase() + '".', function() {
-                    generateNewQuestion();
-                });
-            }
-        } else {
-            // Jika tersalah tekan abjad, tetapkan semula ejaan perkataan semasa untuk peluang kedua
-            showModal('Alamak! ❌', 'Abjad itu tidak betul untuk urutan ejaan ini. Cuba lagi!', function() {
-                // Reset ejaan soalan sedia ada tanpa tukar soalan baharu
-                currentSpelling = [];
-                for (let i = 0; i < currentItem.word.length; i++) {
-                    document.getElementById('slot-' + i).textContent = '';
-                }
-                // Aktifkan semula semua butang pilihan abjad
-                const buttons = optionsContainer.querySelectorAll('button');
-                buttons.forEach(btn => btn.disabled = false);
-            });
-        }
-    }
-
-    // --- PENGENDALIAN MODAL POPUP ---
-    function showModal(title, desc, callback) {
-        modalTitle.textContent = title;
-        modalDesc.textContent = desc;
-        onModalConfirm = callback;
-        customModal.classList.add('active');
-    }
-
-    function closeModal() {
-        customModal.classList.remove('active');
-        if (onModalConfirm) {
-            onModalConfirm();
-        }
-    }
-
-    // Jalankan permainan buat kali pertama secara automatik selepas skrin siap sedia
-    generateNewQuestion();
 </script>
 
