@@ -352,15 +352,25 @@
 <script>
   // --- DATA PERKATAAN MENGIKUT LEVEL ---
 const level1Data = [
+{ question: "a + ni", answer: "ani" },
+{ question: "i + bu", answer: "ibu" },
+{ question: "u + bi", answer: "ubi" },
+{ question: "ba + ca", answer: "baca" },
+{ question: "ba + ka", answer: "baka" },
+{ question: "bu + ku", answer: "buku" },
+{ question: "bu + ka", answer: "buka" },
 { question: "ba + tu", answer: "batu" },
+{ question: "ma + lu", answer: "malu" },
 { question: "ca + ri", answer: "cari" },
 { question: "ja + la", answer: "jala" },
+{ question: "ga + li", answer: "gali" },
 { question: "pa + su", answer: "pasu" },
 { question: "ro + ti", answer: "roti" },
 { question: "su + su", answer: "susu" },
 { question: "ja + ri", answer: "jari" },
 { question: "cu + ci", answer: "cuci" },
 { question: "gu + la", answer: "gula" },
+{ question: "ta + ri", answer: "tari" },
 { question: "lu + pa", answer: "lupa" }
 ];
 const level2Data = [
@@ -378,11 +388,14 @@ const level3Data = [
 { question: "cin + cin", answer: "cincin" },
 { question: "dom + pet", answer: "dompet" },
 { question: "gar + pu", answer: "garpu" },
+{ question: "pin + tu", answer: "pintu" },
 { question: "ker + tas", answer: "kertas" },
 { question: "pen + sel", answer: "pensel" },
+{ question: "ru + mah", answer: "rumah" },
 { question: "wis + tel", answer: "wistel" },
 { question: "ci + cak", answer: "cicak" },
-{ question: "ka + t0k", answer: "katak" }
+{ question: "ka + t0k", answer: "katak" },
+{ question: "ro + boh", answer: "roboh" }
 ];
 // Mengumpul semua jawapan yang ada untuk dijadikan pilihan salah (distractor)
 const allAnswers = [...level1Data, ...level2Data, ...level3Data].map(item => item.answer);
