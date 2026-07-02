@@ -137,7 +137,7 @@
             color: #4a148c;
         }
 
-        /* --- BAHAGIAN BUTANG PILIHAN --- */
+        /* --- BAHAGIAN BUTANG PILIHAN (FIXED TO 6 BUTTONS) --- */
         .options-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -167,16 +167,6 @@
 
         .btn-option:active {
             transform: scale(0.95);
-        }
-
-        /* Aturan khas jika ada 5 butang (BAK 1) supaya baris bawah duduk di tengah */
-        .options-section:has(> :nth-child(5):last-child) > :nth-child(4) {
-            grid-column: span 1 / -1;
-            margin-left: 50%;
-        }
-        .options-section:has(> :nth-child(5):last-child) > :nth-child(5) {
-            grid-column: span 1;
-            margin-right: 50%;
         }
 
         /* --- ARAHAN & PAPAN PENDAHULU --- */
@@ -348,11 +338,20 @@
 </div>
 
 <!-- Struktur Popup Tersuai -->
+<div class="modal-overlay" id="custom-modal">
+    <div class="modal-box">
+        <div class="modal-title" id="modal-title">Tajuk</div>
+        <div class="modal-desc" id="modal-desc">Mesej kandungan di sini...</div>
+        <button class="btn-modal" onclick="closeModal()">Teruskan</button>
+    </div>
+</div>
 
 <script>
-// --- PENGISYTIHARAN DATA PERMAINAN ---
-const poolBak1 = ["A", "I", "U", "B", "N"];
+    // --- PENGISYTIHARAN DATA PERMAINAN ---
+<script>
+    const poolBak1 = ["A", "I", "U", "B", "N"];
 const poolBak2 = ["A", "I", "U", "B", "N", "M", "S", "K"];
+const fullAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Digunakan untuk rawakkan pilihan jawapan
 let currentPool = poolBak1;
 let currentBak = 1;
 let targetLetter = '';
@@ -386,18 +385,20 @@ document.getElementById('btn-bak1').classList.remove('active');
 resetGame();
 }
 function generateNewQuestion() {
-// Ambil huruf soalan secara rawak daripada pool aktif
+// 1. Pilih huruf soalan HANYA daripada pool aktif (Contoh BAK 1: A, I, U, B, N sahaja)
 targetLetter = currentPool[Math.floor(Math.random() * currentPool.length)];
 targetLetterDisplay.textContent = targetLetter;
+// 2. Setkan pilihan jawapan, masukkan jawapan betul dahulu
 let options = new Set();
 options.add(targetLetter);
-// Maksimum butang pilihan mengikut saiz huruf pool (Maksimum 6)
-let maxButtons = Math.min(6, currentPool.length);
-while (options.size < maxButtons) {
-let randomLetter = currentPool[Math.floor(Math.random() * currentPool.length)];
+// 3. Lengkapkan pilihan sehingga tepat 6 butang menggunakan sebarang huruf A-Z secara rawak
+while (options.size < 6) {
+let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
 options.add(randomLetter);
 }
+// 4. Rawakkan kedudukan 6 huruf tersebut
 let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+// 5. Jana butang ke dalam grid HTML
 optionsContainer.innerHTML = '';
 shuffledOptions.forEach(letter => {
 const btn = document.createElement('button');
@@ -406,6 +407,7 @@ btn.textContent = letter;
 btn.onclick = () => checkAnswer(letter);
 optionsContainer.appendChild(btn);
 });
+// 6. Jalankan pemasa
 timeLeft = totalTime;
 timerBar.style.width = '100%';
 clearInterval(timer);
@@ -467,8 +469,7 @@ if (onModalConfirm) {
 onModalConfirm();
 }
 }
-// Jalankan permainan buat kali pertama secara automatik
+// Mula permainan secara automatik
 generateNewQuestion();
-
 
 </script>
