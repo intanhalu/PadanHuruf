@@ -305,7 +305,7 @@
         let optionsSet = new Set(currentItem.word.split(''));
 
         // Lengkapkan butang jawapan dengan abjad rawak sehingga cukup 6 pilihan agar grid kelihatan penuh dan cantik
-        while (optionsSet.size < 6) {
+        while (optionsSet.size < 8) {
             let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
             optionsSet.add(randomLetter);
         }
