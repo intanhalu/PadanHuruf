@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-
     <title>Game Cari Huruf Yang Sama</title>
     <style>
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f1f8e9;
             display: flex;
             justify-content: center;
@@ -31,10 +27,10 @@
             justify-content: center;
         }
 
-        /* Antaramuka Utama (Bingkai ungu) */
+        /* Antaramuka Utama (Bingkai Hijau Muda) */
         .game-container {
             width: 320px;
-            background-color: #B24DD1;
+            background-color: #c8e6c9;
             border-radius: 30px;
             padding: 20px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
@@ -97,12 +93,12 @@
             display: inline-block;
         }
 
-       /* Kotak Paparan Huruf Soalan */
+       /* Kotak Paparan Huruf Soalan (Warna ditukar ke Purple Gelap #4a148c) */
         .shadow-box {
             width: 120px;
             height: 120px;
             background-color: #f5f5f5;
-            border: 3px dashed #81c784;
+            border: 3px dashed #b39ddb; /* Garis putus ditukar ke purple lembut */
             border-radius: 20px;
             margin: 0 auto 25px auto;
             display: flex;
@@ -110,9 +106,9 @@
             align-items: center;
             font-size: 70px;
             font-weight: bold;
-            font-family: 'Montserrat', sans-serif; /* <--- KEMAS KINI DI SINI */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             user-select: none;
-            color: #2e7d32;
+            color: #4a148c; /* <--- WARNA PURPLE GELAP */
         }
 
         /* Pilihan Jawapan Huruf Berwarna di Bahagian Bawah */
@@ -123,17 +119,18 @@
             margin-bottom: 10px;
         }
 
+        /* Butang Pilihan Jawapan (Warna latar ditukar ke Purple Gelap #4a148c) */
         .btn-option {
-            background-color: #2e7d32;
+            background-color: #4a148c; /* <--- WARNA PURPLE GELAP */
             color: white;
             border: none;
             border-radius: 15px;
             padding: 10px 0;
             font-size: 32px;
             font-weight: bold;
-            font-family: 'Montserrat', sans-serif; /* <--- KEMAS KINI DI SINI */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(46, 125, 50, 0.3);
+            box-shadow: 0 4px 6px rgba(74, 20, 140, 0.3); /* Bayang ungu */
             transition: transform 0.1s, background-color 0.2s;
             display: flex;
             justify-content: center;
@@ -238,7 +235,7 @@
 
             <!-- Pilihan Jawapan -->
             <div class="options-section" id="options-container">
-                <!-- Butang jawapan akan dijana melalui JavaScript -->
+                <!-- Butang jawapan dijana melalui JavaScript -->
             </div>
 
             <div class="instruction-section">
@@ -252,19 +249,21 @@
     <div class="leaderboard-container">
         <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
         <ul class="leaderboard-list">
-            
+            <li class="leaderboard-item"><span class="rank">1.</span> Ali<span>120 mata</span></li>
+            <li class="leaderboard-item"><span class="rank">2.</span> Siti<span>95 mata</span></li>
+            <li class="leaderboard-item"><span class="rank">3.</span> Ahmad<span>80 mata</span></li>
         </ul>
     </div>
 </div>
 
 <script>
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let targetLetter = '';
     let score = 0;
     let lives = 3;
     let timer;
     let timeLeft = 10;
-    const totalTime = 10; // 10 saat
+    const totalTime = 10;
 
     const scoreDisplay = document.getElementById('score');
     const livesDisplay = document.getElementById('lives');
@@ -273,11 +272,9 @@
     const timerBar = document.getElementById('timer-bar');
 
     function generateNewQuestion() {
-        // Pilih huruf sasaran
         targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
         targetLetterDisplay.textContent = targetLetter;
 
-        // Jana pilihan jawapan (pastikan ada huruf sasaran)
         let options = new Set();
         options.add(targetLetter);
 
@@ -286,10 +283,8 @@
             options.add(randomLetter);
         }
 
-        // Shuffle pilihan jawapan
         let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
 
-        // Paparkan pilihan
         optionsContainer.innerHTML = '';
         shuffledOptions.forEach(letter => {
             const btn = document.createElement('button');
@@ -299,11 +294,10 @@
             optionsContainer.appendChild(btn);
         });
 
-        // Reset Timer
         timeLeft = totalTime;
         timerBar.style.width = '100%';
         clearInterval(timer);
-        timer = setInterval(runTimer, 100); // Kemas kini setiap 0.1 saat untuk smooth
+        timer = setInterval(runTimer, 100);
     }
 
     function runTimer() {
@@ -348,11 +342,6 @@
     function resetGame() {
         score = 0;
         lives = 3;
-        scoreDisplay.textContent = score;
-        livesDisplay.textContent = '❤️❤️❤️';
-        generateNewQuestion();
-    }
-
-    // Mulakan permainan
-generateNewQuestion();
+scoreDisplay.textContent = score;livesDisplay.textContent = '❤️❤️❤️';
+        generateNewQuestion();}generateNewQuestion();
 </script>
