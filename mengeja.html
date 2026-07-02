@@ -318,7 +318,7 @@
         shuffledLetters.forEach((letter) => {
             const btn = document.createElement('button');
             btn.classList.add('btn-option', 'btn-blue-option');
-            btn.textContent = letter.toUpperCase(); // Papar huruf besar
+            btn.textContent = letter.toLowerCase(); // Papar huruf besar
             btn.dataset.letter = letter; // Simpan huruf kecil asal untuk semakan logik
             btn.onclick = function() { checkLetterInput(letter, btn); };
             optionsContainer.appendChild(btn);
