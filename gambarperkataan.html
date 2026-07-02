@@ -141,10 +141,9 @@
         .question-image {
             width: 90px;
             height: 90px;
-            object-fit: cover;
+            object-fit: contain;
             margin-bottom: 10px;
-            border-radius: 15px;
-            border: 2px solid #e0e0e0;
+            border-radius: 10px;
         }
 
         .sound-text {
@@ -340,7 +339,7 @@
 
             <!-- Kotak Paparan Gambar + Gabungan Bunyi -->
             <div class="shadow-box">
-                <img id="question-img" class="question-image" src="" alt="Gambar Pembelajaran">
+                <img id="question-img" class="question-image" src="" alt="Sila letak fail gambar di folder yang sama">
                 <div id="sound-question" class="sound-text">- + -</div>
                 <div class="hint-text">Menjadi perkataan apa?</div>
             </div>
@@ -362,36 +361,37 @@
     </div>
 </div>
 <script>
-  // --- DATA PERKATAAN + PAUTAN GAMBAR ONLINE PERCUMA (UNSPLASH/PIXABAY) ---
+  // --- DATA PERKATAAN + PAUTAN GAMBAR ---
+// Tukar nama fail imej mengikut nama fail gambar sebenar yang anda simpan di dalam folder game anda
 const level1Data = [
 { question: "ba + tu", answer: "batu", image: "batu.png" },
 { question: "ce + ri", answer: "ceri", image: "ceri.png" },
 { question: "ja + la", answer: "jala", image: "jala.png" },
-{ question: "pa + su", answer: "pasu", image: "unsplash.com" },
-{ question: "ro + ti", answer: "roti", image: "unsplash.com" },
+{ question: "pa + su", answer: "pasu", image: "pasu.png" },
+{ question: "ro + ti", answer: "roti", image: "roti.png" },
 { question: "su + su", answer: "susu", image: "susu.png" },
-{ question: "fe + ri", answer: "feri", image: "unsplash.com" },
-{ question: "gu + la", answer: "gula", image: "unsplash.com" }
+{ question: "fe + ri", answer: "feri", image: "feri.png" },
+{ question: "gu + la", answer: "gula", image: "gula.png" }
 ];
 const level2Data = [
-{ question: "ke + re + ta", answer: "kereta", image: "unsplash.com" },
-{ question: "to + ma + to", answer: "tomato", image: "unsplash.com" },
-{ question: "bo + ne + ka", answer: "boneka", image: "unsplash.com" },
-{ question: "ka + me + ra", answer: "kamera", image: "unsplash.com" },
-{ question: "ke + la + pa", answer: "kelapa", image: "unsplash.com" },
-{ question: "ke + ru + si", answer: "kerusi", image: "unsplash.com" },
-{ question: "re + ba + na", answer: "rebana", image: "unsplash.com" },
-{ question: "se + pa + tu", answer: "sepatu", image: "unsplash.com" }
+{ question: "ke + re + ta", answer: "kereta", image: "kereta.png" },
+{ question: "to + ma + to", answer: "tomato", image: "tomato.png" },
+{ question: "bo + ne + ka", answer: "boneka", image: "boneka.png" },
+{ question: "ka + me + ra", answer: "kamera", image: "kamera.png" },
+{ question: "ke + la + pa", answer: "kelapa", image: "kelapa.png" },
+{ question: "ke + ru + si", answer: "kerusi", image: "kerusi.png" },
+{ question: "re + ba + na", answer: "rebana", image: "rebana.png" },
+{ question: "se + pa + tu", answer: "sepatu", image: "sepatu.png" }
 ];
 const level3Data = [
-{ question: "ban + tal", answer: "bantal", image: "unsplash.com" },
-{ question: "cin + cin", answer: "cincin", image: "unsplash.com" },
-{ question: "dom + pet", answer: "dompet", image: "unsplash.com" },
-{ question: "gar + pu", answer: "garpu", image: "unsplash.com" },
-{ question: "ker + tas", answer: "kertas", image: "unsplash.com" },
-{ question: "pen + sel", answer: "pensel", image: "unsplash.com" },
-{ question: "ci + cak", answer: "cicak", image: "unsplash.com" },
-{ question: "ka + tak", answer: "katak", image: "unsplash.com" }
+{ question: "ban + tal", answer: "bantal", image: "bantal.png" },
+{ question: "cin + cin", answer: "cincin", image: "cincin.png" },
+{ question: "dom + pet", answer: "dompet", image: "dompet.png" },
+{ question: "gar + pu", answer: "garpu", image: "garpu.png" },
+{ question: "ker + tas", answer: "kertas", image: "kertas.png" },
+{ question: "pen + sel", answer: "pensel", image: "pensel.png" },
+{ question: "ci + cak", answer: "cicak", image: "cicak.png" },
+{ question: "ka + tak", answer: "katak", image: "katak.png" }
 ];
 const allAnswers = [...level1Data, ...level2Data, ...level3Data].map(item => item.answer);
 let currentLevelData = level1Data;
@@ -428,9 +428,12 @@ resetGame();
 // --- FUNGSI JANA SOALAN BARU ---
 function generateNewQuestion() {
 if (timer) clearInterval(timer);
+// Pilih satu objek soalan rawak
 currentQuestionItem = currentLevelData[Math.floor(Math.random() * currentLevelData.length)];
+// Kemas kini Paparan Teks Bunyi & Gambar
 soundQuestionDisplay.textContent = currentQuestionItem.question;
-questionImgDisplay.src = currentQuestionItem.image;
+questionImgDisplay.src = currentQuestionItem.image; // <--- MENETAPKAN GAMBAR BARU
+// Sediakan 6 pilihan jawapan
 let options = new Set();
 options.add(currentQuestionItem.answer);
 while (options.size < 6) {
@@ -508,6 +511,8 @@ onModalConfirm();
 }
 // Jalankan secara automatik
 generateNewQuestion();
+
+
 
 
 </script>
