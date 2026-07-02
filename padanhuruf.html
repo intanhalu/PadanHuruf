@@ -47,7 +47,7 @@
             position: relative;
         }
 
-        /* --- BAHAGIAN PEMILIH BABAK (Disusun semula ke bentuk grid 3 lajur) --- */
+        /* --- BAHAGIAN PEMILIH BABAK --- */
         .level-select-container {
             margin-bottom: 15px;
             display: grid;
@@ -59,7 +59,7 @@
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             font-size: 12px;
             font-weight: bold;
-            padding: 6px 0;
+            padding: 8px 0;
             border: 2px solid #4a148c;
             border-radius: 15px;
             background-color: white;
@@ -102,7 +102,6 @@
             width: 100%;
             height: 100%;
             background-color: #d32f2f;
-            transition: width 0.1s linear;
         }
 
         /* --- ELEMEN SOALAN --- */
@@ -295,7 +294,7 @@
     <div class="game-container">
         <div class="game-card">
             
-            <!-- Menu Pilihan Babak (Sehingga BAK 6) -->
+            <!-- Menu Pilihan Babak -->
             <div class="level-select-container">
                 <button id="btn-bak1" class="btn-level active" onclick="changeBak(1)">BAK 1</button>
                 <button id="btn-bak2" class="btn-level" onclick="changeBak(2)">BAK 2</button>
@@ -321,7 +320,7 @@
             <!-- Kotak Paparan Huruf Soalan -->
             <div class="shadow-box" id="target-letter">-</div>
 
-            <!-- Pilihan Jawapan (Sentiasa kekal 6 pilihan) -->
+            <!-- Pilihan Jawapan -->
             <div class="options-section" id="options-container"></div>
 
             <div class="instruction-section">
@@ -337,17 +336,20 @@
         <ul class="leaderboard-list">
             <li class="leaderboard-item"><span class="rank">1.</span> Ali<span>120 mata</span></li>
             <li class="leaderboard-item"><span class="rank">2.</span> Siti<span>95 mata</span></li>
+            <li class="leaderboard-item"><span class="rank">3.</span> Ahmad<span>80 mata</span></li>
         </ul>
     </div>
+</div>
 
-    <script>
-        // --- DATA PERMAINAN (Mengikut Kumpulan Huruf Anda) ---
+<!-- Kotak Popup Notifikasi -->
+<script>
+    // --- DATA KUMPULAN HURUF ---
 const poolBak1 = ["a", "i", "u", "b", "n"];
 const poolBak2 = ["a", "i", "u", "b", "n", "m", "s", "k"];
 const poolBak3 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y"];
 const poolBak4 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r"];
-const poolBak5 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j", "w", "z"]; // Dibetulkan koma tertinggal
-const poolBak6 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j", "w", "z", "v", "o", "e"]; // Dibetulkan koma tertinggal
+const poolBak5 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j", "w", "z"];
+const poolBak6 = ["a", "i", "u", "b", "n", "m", "s", "k", "c", "p", "t", "y", "d", "g", "l", "r", "f", "h", "j", "w", "z", "v", "o", "e"];
 const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
 let currentPool = poolBak1;
 let currentBak = 1;
@@ -358,7 +360,7 @@ let timer = null;
 let timeLeft = 10;
 const totalTime = 10;
 let onModalConfirm = null;
-// ELEMEN DOM
+// AMBIL ELEMEN HTML
 const scoreDisplay = document.getElementById('score');
 const livesDisplay = document.getElementById('lives');
 const targetLetterDisplay = document.getElementById('target-letter');
@@ -367,16 +369,15 @@ const timerBar = document.getElementById('timer-bar');
 const customModal = document.getElementById('custom-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalDesc = document.getElementById('modal-desc');
-// --- LOGIK UTAMA ---
+// --- FUNGSI TUKAR BABAK ---
 function changeBak(bakNumber) {
 currentBak = bakNumber;
-// Buang status aktif lama daripada semua butang babak
+// Kemas kini gaya butang aktif
 for (let i = 1; i <= 6; i++) {
 document.getElementById('btn-bak' + i).classList.remove('active');
 }
-// Setkan status aktif pada butang baharu
 document.getElementById('btn-bak' + bakNumber).classList.add('active');
-// Tukar kumpulan huruf berdasarkan babak aktif
+// Tukar pool abjad
 if (bakNumber === 1) currentPool = poolBak1;
 else if (bakNumber === 2) currentPool = poolBak2;
 else if (bakNumber === 3) currentPool = poolBak3;
@@ -385,22 +386,21 @@ else if (bakNumber === 5) currentPool = poolBak5;
 else if (bakNumber === 6) currentPool = poolBak6;
 resetGame();
 }
+// --- FUNGSI JANA SOALAN & PILIHAN JAWAPAN ---
 function generateNewQuestion() {
 if (timer) clearInterval(timer);
-// 1. Ambil huruf soalan mengikut sekatan Babak semasa
+// Ambi huruf soalan dari pool aktif
 targetLetter = currentPool[Math.floor(Math.random() * currentPool.length)];
 targetLetterDisplay.textContent = targetLetter;
-// 2. Sediakan set jawapan dan masukkan jawapan yang betul
+// Bina 6 pilihan jawapan rawak A-Z
 let options = new Set();
 options.add(targetLetter);
-// 3. Lengkapkan jawapan dengan huruf a-z rawak sehingga cukup 6 butang
 while (options.size < 6) {
 let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
 options.add(randomLetter);
 }
-// 4. Rawakkan kedudukan susunan huruf
 let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
-// 5. Kosongkan kontena lama dan masukkan 6 butang jawapan baharu
+// Paparkan butang pilihan jawapan
 optionsContainer.innerHTML = '';
 shuffledOptions.forEach(letter => {
 const btn = document.createElement('button');
@@ -409,7 +409,7 @@ btn.textContent = letter;
 btn.onclick = function() { checkAnswer(letter); };
 optionsContainer.appendChild(btn);
 });
-// 6. Set semula pemasa bar merah
+// Jalankan semula pemasa
 timeLeft = totalTime;
 timerBar.style.width = '100%';
 timer = setInterval(runTimer, 100);
@@ -419,12 +419,12 @@ timeLeft -= 0.1;
 let percentage = (timeLeft / totalTime) * 100;
 timerBar.style.width = percentage + '%';
 if (timeLeft <= 0) {
-if (timer) clearInterval(timer);
+clearInterval(timer);
 handleWrongAnswer();
 }
 }
 function checkAnswer(selectedLetter) {
-if (timer) clearInterval(timer);
+clearInterval(timer);
 if (selectedLetter === targetLetter) {
 score += 10;
 scoreDisplay.textContent = score;
@@ -457,7 +457,7 @@ scoreDisplay.textContent = score;
 livesDisplay.textContent = '❤️❤️❤️';
 generateNewQuestion();
 }
-// --- PENGENDALIAN MODAL NOTIFIKASI ---
+// --- LOGIK NOTIFIKASI MODAL ---
 function showModal(title, desc, callback) {
 modalTitle.textContent = title;
 modalDesc.textContent = desc;
@@ -470,10 +470,8 @@ if (onModalConfirm) {
 onModalConfirm();
 }
 }
-// Mengaktifkan permainan sebaik sahaja fail dimuatkan
-window.onload = function() {
+// JALANKAN PERMAINAN SECARA TERUS (Mengelakkan isu sekatan onload browser)
 generateNewQuestion();
-};
 
 
-    </script>
+</script>
