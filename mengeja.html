@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Eja Perkataan (Drag & Drop)</title>
+    <style>
+        /* --- GAYA ASAS & REKA LETAK --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f8e9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* --- KONTENA PERMAINAN --- */
+        .game-container {
+            width: 320px;
+            background-color: #c8e6c9;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .game-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 2px solid #a5d6a7;
+            position: relative;
+        }
+
+        /* --- BAHAGIAN PEMILIH TAHAP (LEVEL) --- */
+        .level-select-container {
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-level {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 8px 0;
+            border: 2px solid #4a148c;
+            border-radius: 15px;
+            background-color: white;
+            color: #4a148c;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-level.active {
+            background-color: #4a148c;
+            color: white;
+        }
+
+        /* --- MAKLUMAT HEADER & PEMASA --- */
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        .lives {
+            color: #d32f2f;
+            font-size: 16px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            background-color: #f1f2f6;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            width: 100%;
+            height: 100%;
+            background-color: #d32f2f;
+        }
+
+        /* --- ELEMEN SOALAN --- */
+        .status-section {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .bubble-text {
+            color: #1b5e20;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background-color: #e8f5e9;
+            padding: 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .shadow-box {
+            width: 100%;
+            min-height: 160px;
+            background-color: #f5f5f5;
+            border: 3px dashed #b39ddb;
+            border-radius: 20px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .question-emoji {
+            font-size: 65px;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        /* Ruang Lepas Kotak Jawapan (Drop Slots) */
+        .spelling-slots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+            min-height: 45px;
+            width: 100%;
+        }
+
+        .slot {
+            width: 36px;
+            height: 40px;
+            border: 2px dashed #4a148c;
+            border-radius: 8px;
+            background-color: #f3e5f5;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', sans-serif;
+            color: #2e7d32;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .slot.drag-over {
+            background-color: #ce93d8;
+        }
+
+        .slot.filled {
+            border: 2px solid #2e7d32;
+            background-color: #e8f5e9;
+        }
+
+        /* --- BAHAGIAN ELEMEN HURUF BOLEH DISERET --- */
+        .options-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .drag-letter {
+            background-color: #4a148c;
+            color: #ffffff !important;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            cursor: grab;
+            box-shadow: 0 4px 6px rgba(74, 20, 140, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            touch-action: none; /* Penting untuk kestabilan drag skrin sentuh mobile */
+        }
+
+        .drag-letter:active {
+            cursor: grabbing;
+        }
+
+        .drag-letter.dragging {
+            opacity: 0.4;
+        }
+
+        .drag-letter.invisible-placeholder {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        /* --- ARAHAN & PAPAN PENDAHULU --- */
+        .instruction-section {
+            margin-top: 15px;
+            color: #1b5e20;
+        }
+
+        .instruction-title {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .instruction-desc {
+            font-size: 12px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .leaderboard-container {
+            width: 320px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            padding: 20px;
+            border: 3px solid #2e7d32;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .leaderboard-title {
+            color: #2e7d32;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e8f5e9;
+            font-size: 14px;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #ff9f43;
+            margin-right: 10px;
+        }
+
+        /* --- POPUP NOTIFIKASI TERSUAI --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: 20px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 3px solid #4a148c;
+        }
+
+        .modal-title {
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            color: #4a148c;
+            margin-bottom: 10px;
+        }
+
+        .modal-desc {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .btn-modal {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(46,125,50,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="game-container">
+        <div class="game-card">
+            <!-- Menu Pilihan Level -->
+            <div class="level-select-container">
+                <button id="btn-lvl1" class="btn-level active" onclick="changeLevel(1)">LEVEL 1</button>
+                <button id="btn-lvl2" class="btn-level" onclick="changeLevel(2)">LEVEL 2</button>
+                <button id="btn-lvl3" class="btn-level" onclick="changeLevel(3)">LEVEL 3</button>
+            </div>
+
+            <div class="header-info">
+                <span>SKOR: <span id="score">0</span></span>
+                <span class="lives">NYAWA: <span id="lives">❤️❤️❤️</span></span>
+            </div>
+            
+            <div class="timer-bar">
+                <div class="timer-progress" id="timer-bar"></div>
+            </div>
+
+            <div class="status-section">
+                <div class="bubble-text">Seret huruf ke kotak!</div>
+            </div>
+
+            <!-- Kotak Paparan Emoji + Kotak Penerima Lepas (Drop Slots) -->
+            <div class="shadow-box">
+
+            </div>
+
+          <script>
+            // --- DATA PERKATAAN + EMOJI ---
+const level1Data = [
+{ word: "batu", emoji: "🧱" },
+{ word: "ceri", emoji: "🍒" },
+{ word: "jala", emoji: "🕸️" },
+{ word: "pasu", emoji: "🏺" },
+{ word: "roti", emoji: "🍞" },
+{ word: "susu", emoji: "🥛" },
+{ word: "feri", emoji: "🚢" },
+{ word: "gula", emoji: "🍬" }
+];
+const level2Data = [
+{ word: "kereta", emoji: "🚗" },
+{ word: "tomato", emoji: "🍅" },
+{ word: "boneka", emoji: "🧸" },
+{ word: "kamera", emoji: "📷" },
+{ word: "kelapa", emoji: "🥥" },
+{ word: "kerusi", emoji: "🪑" }
+];
+const level3Data = [
+{ word: "bantal", emoji: "🛏️" },
+{ word: "cincin", emoji: "💍" },
+{ word: "dompet", emoji: "👛" },
+{ word: "garpu", emoji: "🍴" },
+{ word: "kertas", emoji: "📄" },
+{ word: "pensel", emoji: "✏️" }
+];
+const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
+let currentLevelData = level1Data;
+let currentLevel = 1;
+let currentItem = null;
+let currentSpelling = [];
+let score = 0;
+let lives = 3;
+let timer = null;
+let timeLeft = 20; // Ditambah masa ke 20 saat kerana aktiviti menyeret (dragging) memerlukan masa lebih lama
+const totalTime = 20;
+let onModalConfirm = null;
+let draggedElement = null;
+// ELEMEN DOM
+const scoreDisplay = document.getElementById('score');
+const livesDisplay = document.getElementById('lives');
+const questionEmojiDisplay = document.getElementById('question-emoji');
+const slotsContainer = document.getElementById('slots-container');
+const optionsContainer = document.getElementById('options-container');
+const timerBar = document.getElementById('timer-bar');
+const customModal = document.getElementById('custom-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+// --- FUNGSI TUKAR LEVEL ---
+function changeLevel(levelNumber) {
+currentLevel = levelNumber;
+for (let i = 1; i <= 3; i++) {
+document.getElementById('btn-lvl' + i).classList.remove('active');
+}
+document.getElementById('btn-lvl' + levelNumber).classList.add('active');
+if (levelNumber === 1) currentLevelData = level1Data;
+else if (levelNumber === 2) currentLevelData = level2Data;
+else if (levelNumber === 3) currentLevelData = level3Data;
+resetGame();
+}
+// --- FUNGSI JANA SOALAN BARU ---
+function generateNewQuestion() {
+if (timer) clearInterval(timer);
+currentItem = currentLevelData[Math.floor(Math.random() * currentLevelData.length)];
+questionEmojiDisplay.textContent = currentItem.emoji;
+currentSpelling = [];
+// 1. Bina kotak kosong (Drop Slots) berasaskan perkataan aktif
+slotsContainer.innerHTML = '';
+for (let i = 0; i < currentItem.word.length; i++) {
+const slot = document.createElement('div');
+slot.classList.add('slot');
+slot.id = 'slot-' + i;
+slot.dataset.index = i;
+slotsContainer.appendChild(slot);
+// Pengendali fungsi drop untuk komputer (Desktop Drag & Drop)
+slot.addEventListener('dragover', dragOverSlot);
+slot.addEventListener('dragleave', dragLeaveSlot);
+slot.addEventListener('drop', dropOnSlot);
+}
+// 2. Sediakan himpunan huruf (Huruf jawapan + 4 huruf gangguan rawak)
+let letterPool = currentItem.word.split('');
+let extraLettersCount = 0;
+while (extraLettersCount < 4) {
+let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
+if (!currentItem.word.includes(randomLetter)) {
+letterPool.push(randomLetter);
+extraLettersCount++;
+}
+}
+let shuffledLetters = letterPool.sort(() => Math.random() - 0.5);
+// 3. Paparkan elemen huruf yang boleh diseret
+optionsContainer.innerHTML = '';
+shuffledLetters.forEach((letter, index) => {
+const block = document.createElement('div');
+block.classList.add('drag-letter');
+block.textContent = letter;
+block.draggable = true;
+block.id = 'letter-' + index;
+block.dataset.letter = letter;
+// Pengendali sistem drag komputer
+block.addEventListener('dragstart', dragStartLetter);
+block.addEventListener('dragend', dragEndLetter);
+// Pengendali sistem drag skrin sentuh telefon (Mobile Touch Events)
+block.addEventListener('touchstart', handleTouchStart, { passive: false });
+block.addEventListener('touchmove', handleTouchMove, { passive: false });
+block.addEventListener('touchend', handleTouchEnd, { passive: false });
+optionsContainer.appendChild(block);
+});
+timeLeft = totalTime;
+timerBar.style.width = '100%';
+timer = setInterval(runTimer, 100);
+}
+function runTimer() {
+timeLeft -= 0.1;
+let percentage = (timeLeft / totalTime) * 100;
+timerBar.style.width = percentage + '%';
+if (timeLeft <= 0) {
+clearInterval(timer);
+handleWrongAnswer('Masa tamat! ⏰');
+}
+}
+// --- LOGIK UTAMA SEMAKAN SERET & LEPAS (DESKTOP) ---
+function dragStartLetter(e) {
+draggedElement = this;
+this.classList.add('dragging');
+}
+function dragEndLetter() {
+this.classList.remove('dragging');
+}
+function dragOverSlot(e) {
+e.preventDefault();
+let slotIndex = parseInt(this.dataset.index);
+// Benarkan kesan visual hover hanya jika petak sepadan dengan urutan menaip aktif
+if (slotIndex === currentSpelling.length) {
+this.classList.add('drag-over');
+}
+}
+function dragLeaveSlot() {
+this.classList.remove('drag-over');
+}
+function dropOnSlot(e) {
+e.preventDefault();
+this.classList.remove('drag-over');
+let slotIndex = parseInt(this.dataset.index);
+let selectedLetter = draggedElement.dataset.letter;
+processSpellingStep(selectedLetter, slotIndex, draggedElement);
+}
+// --- PENGENDALIAN DRAG SKRIN SENTUH TELEFON (MOBILE TOUCH) ---
+let touchStartX = 0;
+let touchStartY = 0;
+let originalLeft = 0;
+let originalTop = 0;
+function handleTouchStart(e) {
+e.preventDefault();
+draggedElement = this;
+draggedElement.classList.add('dragging');
+let touch = e.touches[0];
+touchStartX = touch.clientX;
+touchStartY = touch.clientY;
+draggedElement.style.position = 'relative';
+originalLeft = parseFloat(draggedElement.style.left) || 0;
+originalTop = parseFloat(draggedElement.style.top) || 0;
+}
+function handleTouchMove(e) {
+if (!draggedElement) return;
+e.preventDefault();
+let touch = e.touches[0];
+let deltaX = touch.clientX - touchStartX;
+let deltaY = touch.clientY - touchStartY;
+draggedElement.style.left = (originalLeft + deltaX) + 'px';
+draggedElement.style.top = (originalTop + deltaY) + 'px';
+draggedElement.style.zIndex = '1000';
+// Cari elemen slot di bawah posisi sentuhan semasa
+let elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+let slot = elementAtPoint ? elementAtPoint.closest('.slot') : null;
+document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+if (slot && parseInt(slot.dataset.index) === currentSpelling.length) {
+slot.classList.add('drag-over');
+}
+}
+function handleTouchEnd(e) {
+if (!draggedElement) return;
+e.preventDefault();
+draggedElement.classList.remove('dragging');
+let touch = e.changedTouches[0];
+let elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+let slot = elementAtPoint ? elementAtPoint.closest('.slot') : null;
+if (slot) slot.classList.remove('drag-over');
+let selectedLetter = draggedElement.dataset.letter;
+let targetSlotIndex = slot ? parseInt(slot.dataset.index) : -1;
+// Reset semula gaya pergerakan relatif elemen jika drop gagal
+draggedElement.style.position = '';
+draggedElement.style.left = '';
+draggedElement.style.top = '';
+draggedElement.style.zIndex = '';
+if (targetSlotIndex !== -1) {
+processSpellingStep(selectedLetter, targetSlotIndex, draggedElement);
+}
+draggedElement = null;
+}
+// --- PROSES SEMAK URUTAN EJAAN ---
+function processSpellingStep(letter, slotIndex, element) {
+let expectedLetterIndex = currentSpelling.length;
+let expectedLetter = currentItem.word[expectedLetterIndex];
+// 1. Pemain melepaskan huruf ke petak yang tepat mengikut turutan
+if (slotIndex === expectedLetterIndex && letter === expectedLetter) {
+currentSpelling.push(letter);
+const targetSlot = document.getElementById('slot-' + slotIndex);
+targetSlot.textContent = letter;
+targetSlot.classList.add('filled');
+// Jadikan huruf yang berjaya diisi menjadi tidak kelihatan (Placeholder lutsinar)
+element.classList.add('invisible-placeholder');
+element.draggable = false;
+// 2. Semak jika perkataan telah berjaya dieja sepenuhnya
+if (currentSpelling.length === currentItem.word.length) {
+clearInterval(timer);
+score += 25; // 25 mata untuk kejayaan seret dan eja
+scoreDisplay.textContent = score;
+generateNewQuestion();
+}
+} else {
+// 3. Ditolak nyawa sekiranya tersalah letak huruf atau salah urutan ejaan
+clearInterval(timer);
+handleWrongAnswer('Ejaan salah / Urutan silap! ❌');
+}
+}
+function handleWrongAnswer(reasonMessage) {
+lives--;
+let hearts = '';
+for (let i = 0; i < lives; i++) {
+hearts += '❤️';
+}
+livesDisplay.textContent = hearts;
+if (lives > 0) {
+showModal(reasonMessage, 'Sila eja semula dengan menyusun huruf mengikut urutan yang betul!', function() {
+generateNewQuestion();
+});
+} else {
+showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir ejaan anda: ' + score + ' mata.', function() {
+resetGame();
+});
+}
+}
+function resetGame() {
+score = 0;
+lives = 3;
+scoreDisplay.textContent = score;
+livesDisplay.textContent = '❤️❤️❤️';
+generateNewQuestion();
+}
+// --- LOGIK NOTIFIKASI MODAL ---
+function showModal(title, desc, callback) {
+modalTitle.textContent = title;
+modalDesc.textContent = desc;
+onModalConfirm = callback;
+customModal.classList.add('active');
+}
+function closeModal() {
+customModal.classList.remove('active');
+if (onModalConfirm) {
+onModalConfirm();
+}
+}
+// Jalankan permainan secara terus sewaktu dibuka
+generateNewQuestion();
+
+
+          </script>
