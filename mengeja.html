@@ -333,7 +333,7 @@
         // Jika huruf yang ditekan betul mengikut urutan ejaan semasa
         if (letter === expectedLetter) {
             currentSpelling.push(letter);
-            document.getElementById('slot-' + currentIndex).textContent = letter.toUpperCase();
+            document.getElementById('slot-' + currentIndex).textContent = letter.toLowerCase();
             
             // Kira baki keperluan huruf tersebut dalam ejaan yang belum diselesaikan
             let totalNeeded = currentItem.word.split('').filter(l => l === letter).length;
@@ -346,7 +346,7 @@
 
             // Jika ejaan telah lengkap sepenuhnya
             if (currentSpelling.length === currentItem.word.length) {
-                showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toUpperCase() + '".', function() {
+                showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toLowerCase() + '".', function() {
                     generateNewQuestion();
                 });
             }
