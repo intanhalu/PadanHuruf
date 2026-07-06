@@ -687,7 +687,7 @@
         <div class="modal-box">
             <div class="modal-title" id="modal-title">Syabas!</div>
             <div class="modal-desc" id="modal-desc">Mesej kandungan...</div>
-            <button class="btn-modal" onclick="closeModal()">Teruskan</button>
+            <button class="btn-modal" id="modal-button" onclick="closeModal()" style="display: none;">Teruskan</button>
         </div>
     </div>
 
@@ -729,6 +729,7 @@
         const customModal = document.getElementById('custom-modal');
         const modalTitle = document.getElementById('modal-title');
         const modalDesc = document.getElementById('modal-desc');
+        const modalButton = document.getElementById('modal-button');
         const leaderboardModal = document.getElementById('leaderboard-modal');
         const leaderboardModalList = document.getElementById('leaderboard-modal-list');
 
@@ -795,31 +796,36 @@
                     if (questionsCompleted >= 10) {
                         showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toLowerCase() + '".', function() {
                             showLeaderboardModal();
-                        });
+                        }, true);
                     } else {
                         showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toLowerCase() + '". (' + questionsCompleted + '/10)', function() {
                             generateNewQuestion();
-                        });
+                        }, true);
                     }
                 }
             } else {
-                showModal('Alamak! ❌', 'Abjad itu tidak betul untuk urutan ejaan ini. Cuba lagi!', function() {
-                    currentSpelling = [];
-                    for (let i = 0; i < currentItem.word.length; i++) {
-                        document.getElementById('slot-' + i).textContent = '';
-                    }
-                    const buttons = optionsContainer.querySelectorAll('button');
-                    buttons.forEach(btn => btn.disabled = false);
-                });
+                // Wrong answer - show message and proceed automatically after 2 seconds
+                showModal('Alamak! ❌', 'Ejaan anda salah.', function() {
+                    questionsCompleted++;
+                    generateNewQuestion();
+                }, false);
             }
         }
 
         // --- PENGENDALIAN MODAL POPUP ---
-        function showModal(title, desc, callback) {
+        function showModal(title, desc, callback, showButton) {
             modalTitle.textContent = title;
             modalDesc.textContent = desc;
             onModalConfirm = callback;
+            modalButton.style.display = showButton ? 'block' : 'none';
             customModal.classList.add('active');
+
+            // Auto-close for wrong answers after 2 seconds
+            if (!showButton) {
+                setTimeout(() => {
+                    closeModal();
+                }, 2000);
+            }
         }
 
         function closeModal() {
