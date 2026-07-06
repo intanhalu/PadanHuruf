@@ -655,14 +655,15 @@
 </head>
 <body>
 <!-- Modal Daftar Nama (Mula Permainan) -->
-<div class="modal-overlay active" id="name-modal">
-    <div class="modal-box" style="border-color: var(--color-success-green);">
-        <div class="modal-title">Selamat Datang! 👋</div>
-        <div class="modal-desc">Sila masukkan nama anda sebelum memulakan permainan mengeja:</div>
-        <input type="text" id="player-name-input" class="input-name-field" placeholder="Nama anda..." maxlength="15">
-        <button class="btn-modal" onclick="startGameWithPlayer()">Mula Main</button>
+
+    <div class="modal-overlay active" id="name-modal">
+        <input type="text" id="player-name-input" placeholder="Nama anda...">
+        <button onclick="startGameWithPlayer()">Mula Main</button>
     </div>
-</div>
+    
+    <!-- Game and leaderboard containers -->
+    <div class="game-container">...</div>
+    <div class="leaderboard-container">...</div>
 
     <div class="main-wrapper">
         <!-- Game and Leaderboard Side by Side -->
@@ -724,6 +725,20 @@
     </div>
 
     <script>
+
+        // Core variables
+        let playerName = "Anda";
+        let correctWordsCount = 0;
+        let wrongWordsCount = 0;
+
+        // Start game function to handle initialization
+        function startGameWithPlayer() {
+            const nameInput = document.getElementById('player-name-input').value.trim();
+            if(nameInput !== "") playerName = nameInput;
+            document.getElementById('name-modal').classList.remove('active');
+            updateSidebarLeaderboard();
+            generateNewQuestion();
+        }
         // --- DATA SOALAN PERKATAAN & EMOJI ---
         const gameData = [
             { word: "kayu", emoji: "🪵" },
@@ -857,29 +872,7 @@
             }
         }
 
-         // --- VARIABEL SISTEM MARKAH & PENGGUNA ---
-    let playerName = "Anda";
-    let questionsCompleted = 0;
-    let totalCorrectSpelling = 0;
-    let totalWrongSpelling = 0;
-    let currentQuestionHasError = false;
-
-    // DATA LEADERBOARD PALSU (Simulasi)
-    let leaderboardData = [
-        { name: "Ali", correct: 10, wrong: 1 },
-        { name: "Siti", correct: 9, wrong: 2 },
-        { name: "Raju", correct: 8, wrong: 4 }
-    ];
-
-    // --- FUNGSI MULA PERMAINAN (DAFTAR NAMA) ---
-    function startGameWithPlayer() {
-        const inputField = document.getElementById('player-name-input');
-        const nameValue = inputField.value.trim();
-        if (nameValue !== "") playerName = nameValue;
-        document.getElementById('name-modal').classList.remove('active');
-        updateSidebarLeaderboard();
-        generateNewQuestion(); // Assuming this is defined in your existing code
-    }
+        
 
     // --- KEMASKINI LEADERBOARD SISI ---
     function updateSidebarLeaderboard() {
