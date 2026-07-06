@@ -296,6 +296,17 @@
             min-width: 35px;
         }
 
+        /* Style for Name Input Modal */
+        .input-name-field {
+            width: 100%;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+
         /* ======== BOTTOM INSTRUCTION SECTION ======== */
         .bottom-info-section {
             margin-top: var(--spacing-lg);
@@ -643,6 +654,15 @@
     </style>
 </head>
 <body>
+<!-- Modal Daftar Nama (Mula Permainan) -->
+<div class="modal-overlay active" id="name-modal">
+    <div class="modal-box" style="border-color: var(--color-success-green);">
+        <div class="modal-title">Selamat Datang! 👋</div>
+        <div class="modal-desc">Sila masukkan nama anda sebelum memulakan permainan mengeja:</div>
+        <input type="text" id="player-name-input" class="input-name-field" placeholder="Nama anda..." maxlength="15">
+        <button class="btn-modal" onclick="startGameWithPlayer()">Mula Main</button>
+    </div>
+</div>
 
     <div class="main-wrapper">
         <!-- Game and Leaderboard Side by Side -->
@@ -707,12 +727,14 @@
         // --- DATA SOALAN PERKATAAN & EMOJI ---
         const gameData = [
             { word: "kayu", emoji: "🪵" },
-            { word: "batu", emoji: "🧱" },
+            { word: "bata", emoji: "🧱" },
             { word: "roti", emoji: "🍞" },
             { word: "gula", emoji: "🍬" },
             { word: "susu", emoji: "🥛" },
             { word: "buku", emoji: "📖" },
+            { word: "sayu", emoji: "🥹" },
             { word: "baju", emoji: "👕" }
+            
         ];
 
         const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -835,38 +857,54 @@
             }
         }
 
-        // --- LEADERBOARD MODAL FUNCTIONS ---
-        function showLeaderboardModal() {
-            const leaderboardData = [
-                { name: "Pelajar A", score: 10 },
-                { name: "Pelajar B", score: 9 },
-                { name: "Pelajar C", score: 8 },
-                { name: "Anda", score: 10 },
-                { name: "Pelajar D", score: 7 }
-            ];
+         // --- VARIABEL SISTEM MARKAH & PENGGUNA ---
+    let playerName = "Anda";
+    let questionsCompleted = 0;
+    let totalCorrectSpelling = 0;
+    let totalWrongSpelling = 0;
+    let currentQuestionHasError = false;
 
-            leaderboardData.sort((a, b) => b.score - a.score);
+    // DATA LEADERBOARD PALSU (Simulasi)
+    let leaderboardData = [
+        { name: "Ali", correct: 10, wrong: 1 },
+        { name: "Siti", correct: 9, wrong: 2 },
+        { name: "Raju", correct: 8, wrong: 4 }
+    ];
 
-            leaderboardModalList.innerHTML = '';
-            leaderboardData.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.classList.add('leaderboard-modal-item');
-                li.innerHTML = `
-                    <span class="leaderboard-modal-rank">#${index + 1}</span>
-                    <span class="leaderboard-modal-name">${item.name}</span>
-                    <span class="leaderboard-modal-score">${item.score}/10</span>
-                `;
-                leaderboardModalList.appendChild(li);
-            });
+    // --- FUNGSI MULA PERMAINAN (DAFTAR NAMA) ---
+    function startGameWithPlayer() {
+        const inputField = document.getElementById('player-name-input');
+        const nameValue = inputField.value.trim();
+        if (nameValue !== "") playerName = nameValue;
+        document.getElementById('name-modal').classList.remove('active');
+        updateSidebarLeaderboard();
+        generateNewQuestion(); // Assuming this is defined in your existing code
+    }
 
-            leaderboardModal.classList.add('active');
+    // --- KEMASKINI LEADERBOARD SISI ---
+    function updateSidebarLeaderboard() {
+        const sidebarList = document.querySelector('.leaderboard-list');
+        if (!sidebarList) return;
+
+        let activeData = [...leaderboardData];
+        const playerIndex = activeData.findIndex(p => p.name === playerName || p.name === playerName + " (Anda)");
+        
+        if (playerIndex > -1) {
+            activeData[playerIndex].correct = totalCorrectSpelling;
+            activeData[playerIndex].wrong = totalWrongSpelling;
+        } else {
+            activeData.push({ name: playerName + " (Anda)", correct: totalCorrectSpelling, wrong: totalWrongSpelling });
         }
 
-        function closeLeaderboardModal() {
-            leaderboardModal.classList.remove('active');
-            questionsCompleted = 0;
-            generateNewQuestion();
-        }
+        activeData.sort((a, b) => b.correct - a.correct || a.wrong - b.wrong);
+        
+        // Update DOM for sidebar (list rendering logic here)
+    }
+
+    // --- PAPAR POPUP KEDUDUKAN AKHIR (10 SOALAN) ---
+    function showLeaderboardModal() {
+        // ... (Logic to update and show modal, using totalCorrectSpelling/totalWrongSpelling)
+    }
 
         // Jalankan permainan buat kali pertama secara automatik selepas skrin siap sedia
         generateNewQuestion();
