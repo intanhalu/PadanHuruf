@@ -302,6 +302,73 @@
             border-radius: 12px;
             cursor: pointer;
         }
+
+        /* --- LEADERBOARD MODAL STYLES --- */
+        .leaderboard-modal-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 400px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 3px solid #2e7d32;
+        }
+
+        .leaderboard-modal-title {
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .leaderboard-modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .leaderboard-modal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e8f5e9;
+            font-size: 16px;
+        }
+
+        .leaderboard-modal-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-modal-rank {
+            font-weight: bold;
+            color: #ff9f43;
+            font-size: 18px;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .leaderboard-modal-name {
+            flex-grow: 1;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .leaderboard-modal-score {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .celebration-message {
+            text-align: center;
+            font-size: 20px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
     </style>
 
 </head>
@@ -360,6 +427,18 @@
     </div>
 </div>
 
+<!-- Leaderboard Popup Modal -->
+<div class="modal-overlay" id="leaderboard-modal">
+    <div class="leaderboard-modal-box">
+        <div class="leaderboard-modal-title">🏆 Kedudukan! 🏆</div>
+        <div class="celebration-message" id="celebration-msg">Tahniah! Anda telah menyelesaikan 10 soalan!</div>
+        <ul class="leaderboard-modal-list" id="leaderboard-modal-list">
+            <!-- Leaderboard items will be populated here -->
+        </ul>
+        <button class="btn-modal" onclick="closeLeaderboardModal()" style="width: 100%;">Teruskan Bermain</button>
+    </div>
+</div>
+
 <script>
     // --- DATA SOALAN PERKATAAN & EMOJI ---
     const gameData = [
@@ -377,6 +456,7 @@
     let currentItem = null;
     let currentSpelling = [];
     let onModalConfirm = null;
+    let questionsCompleted = 0; // Counter for completed questions
 
     // ELEMEN DOM
     const questionEmojiDisplay = document.getElementById('question-emoji');
@@ -385,6 +465,8 @@
     const customModal = document.getElementById('custom-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalDesc = document.getElementById('modal-desc');
+    const leaderboardModal = document.getElementById('leaderboard-modal');
+    const leaderboardModalList = document.getElementById('leaderboard-modal-list');
 
     // --- FUNGSI JANA SOALAN BARU ---
     function generateNewQuestion() {
@@ -448,9 +530,18 @@
 
             // Jika ejaan telah lengkap sepenuhnya
             if (currentSpelling.length === currentItem.word.length) {
-                showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toLowerCase() + '".', function() {
-                    generateNewQuestion();
-                });
+                questionsCompleted++; // Increment counter
+
+                // Check if 10 questions have been completed
+                if (questionsCompleted >= 10) {
+                    showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toLowerCase() + '".', function() {
+                        showLeaderboardModal();
+                    });
+                } else {
+                    showModal('Tahniah! 🎉', 'Ejaan anda tepat untuk perkataan "' + currentItem.word.toLowerCase() + '". (' + questionsCompleted + '/10)', function() {
+                        generateNewQuestion();
+                    });
+                }
             }
         } else {
             // Jika tersalah tekan abjad, tetapkan semula ejaan perkataan semasa untuk peluang kedua
@@ -482,8 +573,47 @@
         }
     }
 
+    // --- LEADERBOARD MODAL FUNCTIONS ---
+    function showLeaderboardModal() {
+        // Generate sample leaderboard data
+        const leaderboardData = [
+            { name: "Pelajar A", score: 10 },
+            { name: "Pelajar B", score: 9 },
+            { name: "Pelajar C", score: 8 },
+            { name: "Anda", score: 10 },
+            { name: "Pelajar D", score: 7 }
+        ];
+
+        // Sort by score descending
+        leaderboardData.sort((a, b) => b.score - a.score);
+
+        // Populate leaderboard list
+        leaderboardModalList.innerHTML = '';
+        leaderboardData.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.classList.add('leaderboard-modal-item');
+            li.innerHTML = `
+                <span class="leaderboard-modal-rank">#${index + 1}</span>
+                <span class="leaderboard-modal-name">${item.name}</span>
+                <span class="leaderboard-modal-score">${item.score}/10</span>
+            `;
+            leaderboardModalList.appendChild(li);
+        });
+
+        // Show modal
+        leaderboardModal.classList.add('active');
+    }
+
+    function closeLeaderboardModal() {
+        leaderboardModal.classList.remove('active');
+        // Reset counter and continue with new questions
+        questionsCompleted = 0;
+        generateNewQuestion();
+    }
+
     // Jalankan permainan buat kali pertama secara automatik selepas skrin siap sedia
     generateNewQuestion();
 </script>
+
 
 
