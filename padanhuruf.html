@@ -452,9 +452,12 @@ showModal('Alamak! ❌', 'Jawapan anda salah atau masa telah tamat. Sila cuba la
 generateNewQuestion();
 });
 } else {
-showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
-resetGame();
-});
+    let playerName = prompt('Game Over! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
+    leaderboardData.push({ name: playerName, score: score });
+    renderLeaderboard();
+    showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
+        resetGame();
+    });
 }
 }
 function resetGame() {
