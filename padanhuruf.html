@@ -477,7 +477,26 @@ if (onModalConfirm) {
 onModalConfirm();
 }
 }
+
+let leaderboardData = [
+    { name: "Ali", score: 150 }
+];
+
+function renderLeaderboard() {
+    const list = document.getElementById('leaderboard-list');
+    list.innerHTML = '';
+    const sorted = [...leaderboardData].sort((a, b) => b.score - a.score).slice(0, 10); // top 10
+    sorted.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.classList.add('leaderboard-item');
+        li.innerHTML = `<span class="rank">${index + 1}.</span> ${entry.name}<span>${entry.score} mata</span>`;
+        list.appendChild(li);
+    });
+}
+
+
 // JALANKAN PERMAINAN SECARA TERUS (Mengelakkan isu sekatan onload browser)
+renderLeaderboard();
 generateNewQuestion();
 
 
