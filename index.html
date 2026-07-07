@@ -314,8 +314,13 @@
             scoreDisplay.textContent = score;
             generateNewQuestion();
         } else {
-            handleWrongAnswer();
-        }
+    let playerName = prompt('Game Over! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
+    leaderboardData.push({ name: playerName, score: score });
+    renderLeaderboard();
+    showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
+        resetGame();
+    });
+}
     }
 
     function handleWrongAnswer() {
