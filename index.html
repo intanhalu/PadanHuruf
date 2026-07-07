@@ -314,21 +314,43 @@
         }
     }
 
-    function checkAnswer(selectedLetter) {
-        clearInterval(timer);
-        if (selectedLetter === targetLetter) {
-            score += 10;
-            scoreDisplay.textContent = score;
-            generateNewQuestion();
-        } else {
-    let playerName = prompt('Game Over! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
+   function checkAnswer(selectedLetter) {
+    clearInterval(timer);
+    if (selectedLetter === targetLetter) {
+        score += 10;
+        scoreDisplay.textContent = score;
+        generateNewQuestion();
+    } else {
+        handleWrongAnswer();
+    }
+}
+
+function handleWrongAnswer() {
+    lives--;
+    let hearts = '';
+    for (let i = 0; i < lives; i++) {
+        hearts += '❤️';
+    }
+    livesDisplay.textContent = hearts;
+
+    if (lives > 0) {
+        alert('Salah! Cuba lagi.');
+        generateNewQuestion();
+    } else {
+        gameOver();
+    }
+}
+
+function gameOver() {
+    clearInterval(timer);
+    let playerName = prompt('Permainan Tamat! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
     leaderboardData.push({ name: playerName, score: score });
     renderLeaderboard();
     showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
         resetGame();
     });
 }
-    }
+
 
     function handleWrongAnswer() {
         lives--;
