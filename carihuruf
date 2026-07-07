@@ -1,0 +1,117 @@
+<script>
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    let targetLetter = '';
+    let score = 0;
+    let lives = 3;
+    let timer;
+    let timeLeft = 10;
+    const totalTime = 10;
+
+    let leaderboardData = [];
+
+    const scoreDisplay = document.getElementById('score');
+    const livesDisplay = document.getElementById('lives');
+    const targetLetterDisplay = document.getElementById('target-letter');
+    const optionsContainer = document.getElementById('options-container');
+    const timerBar = document.getElementById('timer-bar');
+
+    function generateNewQuestion() {
+        targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+        targetLetterDisplay.textContent = targetLetter;
+
+        let options = new Set();
+        options.add(targetLetter);
+
+        while (options.size < 6) {
+            let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            options.add(randomLetter);
+        }
+
+        let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+
+        optionsContainer.innerHTML = '';
+        shuffledOptions.forEach(letter => {
+            const btn = document.createElement('button');
+            btn.classList.add('btn-option');
+            btn.textContent = letter;
+            btn.onclick = () => checkAnswer(letter);
+            optionsContainer.appendChild(btn);
+        });
+
+        timeLeft = totalTime;
+        timerBar.style.width = '100%';
+        clearInterval(timer);
+        timer = setInterval(runTimer, 100);
+    }
+
+    function runTimer() {
+        timeLeft -= 0.1;
+        let percentage = (timeLeft / totalTime) * 100;
+        timerBar.style.width = percentage + '%';
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            handleWrongAnswer();
+        }
+    }
+
+    function checkAnswer(selectedLetter) {
+        clearInterval(timer);
+        if (selectedLetter === targetLetter) {
+            score += 10;
+            scoreDisplay.textContent = score;
+            generateNewQuestion();
+        } else {
+            handleWrongAnswer();
+        }
+    }
+
+    function handleWrongAnswer() {
+        lives--;
+        let hearts = '';
+        for (let i = 0; i < lives; i++) {
+            hearts += '❤️';
+        }
+        livesDisplay.textContent = hearts;
+
+        if (lives > 0) {
+            alert('Salah! Cuba lagi.');
+            generateNewQuestion();
+        } else {
+            gameOver();
+        }
+    }
+
+    function gameOver() {
+        clearInterval(timer);
+        let playerName = prompt('Permainan Tamat! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
+        leaderboardData.push({ name: playerName, score: score });
+        renderLeaderboard();
+        alert('Game Over! 🏁 Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.');
+        resetGame();
+    }
+
+    function resetGame() {
+        score = 0;
+        lives = 3;
+        scoreDisplay.textContent = score;
+        livesDisplay.textContent = '❤️❤️❤️';
+        generateNewQuestion();
+    }
+    
+    function renderLeaderboard() {
+        const list = document.getElementById('leaderboard-list');
+        list.innerHTML = '';
+        const sorted = [...leaderboardData].sort((a, b) => b.score - a.score).slice(0, 10); // top 10
+        sorted.forEach((entry, index) => {
+            const li = document.createElement('li');
+            li.classList.add('leaderboard-item');
+            li.innerHTML = `<span class="rank">${index + 1}.</span> ${entry.name} <span>${entry.score} mata</span>`;
+            list.appendChild(li);
+        });
+    }
+
+    // Mula permainan
+    renderLeaderboard();
+    generateNewQuestion();
+</script>
