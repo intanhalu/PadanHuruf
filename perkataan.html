@@ -356,9 +356,7 @@
     <!-- Papan Pendahulu -->
     <div class="leaderboard-container">
         <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
-        <ul class="leaderboard-list">
-            <li class="leaderboard-item"><span class="rank">1.</span> Ali<span>150 mata</span></li>
-        </ul>
+        <ul class="leaderboard-list" id="leaderboard-list"></ul>
     </div>
   
 <script>
@@ -504,9 +502,12 @@ showModal('Alamak! ❌', 'Gabungan bunyi kurang tepat. Sila cuba lagi!', functio
 generateNewQuestion();
 });
 } else {
-showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
-resetGame();
-});
+    let playerName = prompt('Game Over! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
+    leaderboardData.push({ name: playerName, score: score });
+    renderLeaderboard();
+    showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.', function() {
+        resetGame();
+    });
 }
 }
 function resetGame() {
@@ -529,7 +530,26 @@ if (onModalConfirm) {
 onModalConfirm();
 }
 }
+
+let leaderboardData = [
+    { name: "Ali", score: 150 }
+];
+
+function renderLeaderboard() {
+    const list = document.getElementById('leaderboard-list');
+    list.innerHTML = '';
+    const sorted = [...leaderboardData].sort((a, b) => b.score - a.score).slice(0, 10); // top 10
+    sorted.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.classList.add('leaderboard-item');
+        li.innerHTML = `<span class="rank">${index + 1}.</span> ${entry.name}<span>${entry.score} mata</span>`;
+        list.appendChild(li);
+    });
+}
+
+
 // Jalankan permainan buat kali pertama secara automatik
+renderLeaderboard();
 generateNewQuestion();
 
 
