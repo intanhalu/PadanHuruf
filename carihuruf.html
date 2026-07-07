@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Cari Huruf Yang Sama</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f8e9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Antaramuka Utama (Bingkai Hijau Muda) */
+        .game-container {
+            width: 320px;
+            background-color: #c8e6c9;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Kad Putih Dalaman */
+        .game-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 2px solid #a5d6a7;
+            position: relative;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .lives {
+            color: #d32f2f;
+            font-size: 16px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            background-color: #f1f2f6;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            width: 100%;
+            height: 100%;
+            background-color: #d32f2f;
+            transition: width 0.1s linear;
+        }
+
+        .status-section {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .bubble-text {
+            color: #1b5e20;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background-color: #e8f5e9;
+            padding: 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+       /* Kotak Paparan Huruf Soalan (Warna ditukar ke Purple Gelap #4a148c) */
+        .shadow-box {
+            width: 120px;
+            height: 120px;
+            background-color: #f5f5f5;
+            border: 3px dashed #b39ddb; /* Garis putus ditukar ke purple lembut */
+            border-radius: 20px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 70px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            user-select: none;
+            color: #4a148c; /* <--- WARNA PURPLE GELAP */
+        }
+
+        /* Pilihan Jawapan Huruf Berwarna di Bahagian Bawah */
+        .options-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        /* Butang Pilihan Jawapan (Warna latar ditukar ke Purple Gelap #4a148c) */
+        .btn-option {
+            background-color: #4a148c; /* <--- WARNA PURPLE GELAP */
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 0;
+            font-size: 32px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(74, 20, 140, 0.3); /* Bayang ungu */
+            transition: transform 0.1s, background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-option:active {
+            transform: scale(0.95);
+        }
+
+        .btn-option:disabled {
+            background-color: #b2bec3;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Bahagian Teks Bawah */
+        .instruction-section {
+            margin-top: 15px;
+            color: #1b5e20;
+        }
+
+        .instruction-title {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .instruction-desc {
+            font-size: 12px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* Papan Pendahulu (Leaderboard) */
+        .leaderboard-container {
+            width: 320px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            padding: 20px;
+            border: 3px solid #2e7d32;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .leaderboard-title {
+            color: #2e7d32;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e8f5e9;
+            font-size: 14px;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #ff9f43;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <!-- Antaramuka Game -->
+    <div class="game-container">
+        <div class="game-card">
+            <div class="header-info">
+                <span>SKOR: <span id="score">0</span></span>
+                <span class="lives">NYAWA: <span id="lives">❤️❤️❤️</span></span>
+            </div>
+            
+            <div class="timer-bar">
+                <div class="timer-progress" id="timer-bar"></div>
+            </div>
+
+            <div class="status-section">
+                <div class="bubble-text">Cari huruf ini!</div>
+            </div>
+
+            <!-- Kotak Paparan Huruf Soalan -->
+            <div class="shadow-box" id="target-letter">A</div>
+
+            <!-- Pilihan Jawapan -->
+            <div class="options-section" id="options-container">
+                <!-- Butang jawapan dijana melalui JavaScript -->
+            </div>
+
+            <div class="instruction-section">
+                <div class="instruction-title">CARA BERMAIN</div>
+                <div class="instruction-desc">Tekan huruf yang sama seperti soalan sebelum masa tamat!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Papan Pendahulu -->
+    <div class="leaderboard-container">
+        <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
+        <ul class="leaderboard-list" id="leaderboard-list"></ul>
+    </div>
+    
+    
+</div>
+
+<script>
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    let targetLetter = '';
+    let score = 0;
+    let lives = 3;
+    let timer;
+    let timeLeft = 10;
+    const totalTime = 10;
+
+    let leaderboardData = [];
+
+    const scoreDisplay = document.getElementById('score');
+    const livesDisplay = document.getElementById('lives');
+    const targetLetterDisplay = document.getElementById('target-letter');
+    const optionsContainer = document.getElementById('options-container');
+    const timerBar = document.getElementById('timer-bar');
+
+    function generateNewQuestion() {
+        targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+        targetLetterDisplay.textContent = targetLetter;
+
+        let options = new Set();
+        options.add(targetLetter);
+
+        while (options.size < 6) {
+            let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            options.add(randomLetter);
+        }
+
+        let shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+
+        optionsContainer.innerHTML = '';
+        shuffledOptions.forEach(letter => {
+            const btn = document.createElement('button');
+            btn.classList.add('btn-option');
+            btn.textContent = letter;
+            btn.onclick = () => checkAnswer(letter);
+            optionsContainer.appendChild(btn);
+        });
+
+        timeLeft = totalTime;
+        timerBar.style.width = '100%';
+        clearInterval(timer);
+        timer = setInterval(runTimer, 100);
+    }
+
+    function runTimer() {
+        timeLeft -= 0.1;
+        let percentage = (timeLeft / totalTime) * 100;
+        timerBar.style.width = percentage + '%';
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            handleWrongAnswer();
+        }
+    }
+
+    function checkAnswer(selectedLetter) {
+        clearInterval(timer);
+        if (selectedLetter === targetLetter) {
+            score += 10;
+            scoreDisplay.textContent = score;
+            generateNewQuestion();
+        } else {
+            handleWrongAnswer();
+        }
+    }
+
+    function handleWrongAnswer() {
+        lives--;
+        let hearts = '';
+        for (let i = 0; i < lives; i++) {
+            hearts += '❤️';
+        }
+        livesDisplay.textContent = hearts;
+
+        if (lives > 0) {
+            alert('Salah! Cuba lagi.');
+            generateNewQuestion();
+        } else {
+            gameOver();
+        }
+    }
+
+    function gameOver() {
+        clearInterval(timer);
+        let playerName = prompt('Permainan Tamat! Skor akhir anda: ' + score + '. Masukkan nama anda:') || 'Pemain';
+        leaderboardData.push({ name: playerName, score: score });
+        renderLeaderboard();
+        alert('Game Over! 🏁 Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata.');
+        resetGame();
+    }
+
+    function resetGame() {
+        score = 0;
+        lives = 3;
+        scoreDisplay.textContent = score;
+        livesDisplay.textContent = '❤️❤️❤️';
+        generateNewQuestion();
+    }
+    
+    function renderLeaderboard() {
+        const list = document.getElementById('leaderboard-list');
+        list.innerHTML = '';
+        const sorted = [...leaderboardData].sort((a, b) => b.score - a.score).slice(0, 10); // top 10
+        sorted.forEach((entry, index) => {
+            const li = document.createElement('li');
+            li.classList.add('leaderboard-item');
+            li.innerHTML = `<span class="rank">${index + 1}.</span> ${entry.name} <span>${entry.score} mata</span>`;
+            list.appendChild(li);
+        });
+    }
+
+    // Mula permainan
+    renderLeaderboard();
+    generateNewQuestion();
+</script>
