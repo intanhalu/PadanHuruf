@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Eja Perkataan (Emoji)</title>
+    <style>
+        /* --- GAYA ASAS & REKA LETAK --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3e5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* --- KONTENA PERMAINAN --- */
+        .game-container {
+            width: 380px;
+            background-color: #e1bee7;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .game-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 2px solid #ce93d8;
+            position: relative;
+        }
+
+        /* --- BAHAGIAN PEMILIH TAHAP (LEVEL) --- */
+        .level-select-container {
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-level {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 8px 0;
+            border: 2px solid #6a1b9a;
+            border-radius: 15px;
+            background-color: white;
+            color: #6a1b9a;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-level.active {
+            background-color: #6a1b9a;
+            color: white;
+        }
+
+        /* --- MAKLUMAT HEADER & PEMASA --- */
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            color: #6a1b9a;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        .lives {
+            color: #d32f2f;
+            font-size: 16px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            background-color: #f1f2f6;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            width: 100%;
+            height: 100%;
+            background-color: #d32f2f;
+            transition: width 0.1s linear;
+        }
+
+        /* --- ELEMEN SOALAN --- */
+        .status-section {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .bubble-text {
+            color: #4a148c;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background-color: #f3e5f5;
+            padding: 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Kotak Paparan Emoji */
+        .emoji-box {
+            width: 140px;
+            height: 140px;
+            background-color: #faf5fb;
+            border: 3px dashed #ce93d8;
+            border-radius: 20px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 72px;
+        }
+
+        /* Kotak Input Ejaan */
+        .spell-input-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .spell-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 8px;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            letter-spacing: 10px;
+            text-align: center;
+            color: #4a148c;
+            background-color: #faf5fb;
+            border: 3px solid #ba68c8;
+            border-radius: 15px;
+            text-transform: lowercase;
+        }
+
+        .spell-input:focus {
+            outline: none;
+            border-color: #6a1b9a;
+        }
+
+        .spell-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .btn-clear {
+            background-color: #ffffff;
+            color: #6a1b9a;
+            border: 2px solid #ba68c8;
+            border-radius: 12px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- BAHAGIAN BUTANG PILIHAN HURUF --- */
+        .options-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .btn-option {
+            background-color: #6a1b9a;
+            color: #ffffff !important;
+            border: none;
+            border-radius: 15px;
+            padding: 12px 0;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(106, 27, 154, 0.3);
+            transition: transform 0.1s, background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-option:active {
+            transform: scale(0.95);
+        }
+
+        .btn-option:disabled {
+            background-color: #ce93d8;
+            cursor: not-allowed;
+        }
+
+        /* --- ARAHAN & PAPAN PENDAHULU --- */
+        .instruction-section {
+            margin-top: 15px;
+            color: #4a148c;
+        }
+
+        .instruction-title {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .instruction-desc {
+            font-size: 12px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .leaderboard-container {
+            width: 320px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            padding: 20px;
+            border: 3px solid #6a1b9a;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .leaderboard-title {
+            color: #6a1b9a;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f3e5f5;
+            font-size: 14px;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #ff9f43;
+            margin-right: 10px;
+        }
+
+        .leaderboard-empty {
+            text-align: center;
+            color: #9e9e9e;
+            font-size: 13px;
+            padding: 10px;
+        }
+
+        .clear-board-btn {
+            display: block;
+            margin: 15px auto 0 auto;
+            background: none;
+            border: 1px solid #d1c4e9;
+            color: #9575cd;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* --- POPUP NOTIFIKASI TERSUAI --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: 20px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 3px solid #6a1b9a;
+        }
+
+        .modal-title {
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            color: #6a1b9a;
+            margin-bottom: 10px;
+        }
+
+        .modal-desc {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid #ba68c8;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .btn-modal {
+            background-color: #6a1b9a;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(106,27,154,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <!-- Antaramuka Game -->
+    <div class="game-container">
+        <div class="game-card">
+
+            <!-- Menu Pilihan Level -->
+            <div class="level-select-container">
+                <button id="btn-lvl1" class="btn-level active" onclick="changeLevel(1)">LEVEL 1</button>
+                <button id="btn-lvl2" class="btn-level" onclick="changeLevel(2)">LEVEL 2</button>
+                <button id="btn-lvl3" class="btn-level" onclick="changeLevel(3)">LEVEL 3</button>
+            </div>
+
+            <div class="header-info">
+                <span>SKOR: <span id="score">0</span></span>
+                <span class="lives">NYAWA: <span id="lives">❤️❤️❤️</span></span>
+            </div>
+
+            <div class="timer-bar">
+                <div class="timer-progress" id="timer-bar"></div>
+            </div>
+
+            <div class="status-section">
+                <div class="bubble-text">Eja perkataan ini!</div>
+            </div>
+
+            <!-- Kotak Paparan Emoji Soalan -->
+            <div class="emoji-box" id="emoji-display">❓</div>
+
+            <!-- Kotak Input Ejaan -->
+            <div class="spell-input-wrapper">
+                <input type="text" id="spell-input" class="spell-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="...">
+                <div class="spell-actions">
+                    <button class="btn-clear" onclick="backspaceLetter()">⌫ Padam</button>
+                    <button class="btn-clear" onclick="clearInput()">🔄 Kosong</button>
+                </div>
+            </div>
+
+            <!-- Pilihan Huruf -->
+            <div class="options-section" id="options-container"></div>
+
+            <div class="instruction-section">
+                <div class="instruction-title">CARA BERMAIN</div>
+                <div class="instruction-desc">Tengok gambar emoji, lalu eja perkataannya menggunakan huruf yang disediakan (atau taip terus dalam kotak)!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Papan Pendahulu -->
+    <div class="leaderboard-container">
+        <h3 class="leaderboard-title">🏆 Papan Pendahulu</h3>
+        <ul class="leaderboard-list" id="leaderboard-list"></ul>
+        <button class="clear-board-btn" onclick="clearLeaderboard()">Kosongkan Papan Pendahulu</button>
+    </div>
+</div>
+
+<!-- Popup Notifikasi Tersuai -->
+<div class="modal-overlay" id="custom-modal">
+    <div class="modal-box">
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-desc" id="modal-desc"></div>
+        <input type="text" id="modal-name-input" class="modal-input" placeholder="Masukkan nama anda" maxlength="20" style="display:none;">
+        <button class="btn-modal" onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+<script>
+  // --- DATA PERKATAAN & EMOJI MENGIKUT LEVEL ---
+const level1Data = [
+    { word: "ibu", emoji: "👩" },
+    { word: "batu", emoji: "🪨" },
+    { word: "baju", emoji: "👕" },
+    { word: "biji", emoji: "🌱" },
+    { word: "susu", emoji: "🥛" },
+    { word: "gula", emoji: "🧂" },
+    { word: "sayu", emoji: "😔" },
+    { word: "dada", emoji: "🫁" },
+    { word: "dadu", emoji: "🎲" },
+    { word: "kari", emoji: "🍛" },
+    { word: "sagu", emoji: "🧋" },
+    { word: "pari", emoji: "🐟" },
+    { word: "pagi", emoji: "🌅" },
+    { word: "jari", emoji: "👆" },
+    { word: "buku", emoji: "📖" }
+];
+const level2Data = [
+    { word: "bola", emoji: "⚽" },
+    { word: "roti", emoji: "🍞" },
+    { word: "beli", emoji: "🛒" },
+    { word: "jeli", emoji: "🍮" },
+    { word: "geli", emoji: "🕷️" },
+    { word: "ceri", emoji: "🍒" },
+    { word: "kereta", emoji: "🚗" },
+    { word: "kelapa", emoji: "🥥" },
+    { word: "meja", emoji: "🍽️" },
+    { word: "feri", emoji: "⛴️" },
+    { word: "tidur", emoji: "😴" },
+    { word: "bibir", emoji: "👄" },
+    { word: "cicak", emoji: "🦎" },
+    { word: "jam", emoji: "⏰" },
+    { word: "ubat", emoji: "💊" },
+    { word: "ulat", emoji: "🐛" },
+    { word: "dapur", emoji: "🍳" }
+];
+const level3Data = [
+    { word: "payung", emoji: "☂️" },
+    { word: "bomba", emoji: "🚒" },
+    { word: "malam", emoji: "🌙" },
+    { word: "bendera", emoji: "🚩" },
+    { word: "sakit", emoji: "🤒" },
+    { word: "geram", emoji: "😠" },
+    { word: "kolam", emoji: "🏊" },
+    { word: "cacing", emoji: "🪱" },
+    { word: "harimau", emoji: "🐯" },
+    { word: "kucing", emoji: "🐱" },
+    { word: "gunting", emoji: "✂️" }
+];
+const fullAlphabet = "abcdefghijklmnopqrstuvwxyz";
+let currentLevelData = level1Data;
+let currentLevel = 1;
+let currentQuestionItem = null;
+let score = 0;
+let lives = 3;
+let timer = null;
+let timeLeft = 10;
+let totalTime = 10;
+let onModalConfirm = null;
+
+// --- LEADERBOARD (localStorage) ---
+const LEADERBOARD_KEY = 'ejaEmojiLeaderboard';
+const DEFAULT_LEADERBOARD = [
+    { name: "Ali", score: 150 }
+];
+
+function loadLeaderboard() {
+    try {
+        const saved = localStorage.getItem(LEADERBOARD_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) return parsed;
+        }
+    } catch (e) {
+        console.error('Gagal membaca papan pendahulu:', e);
+    }
+    return [...DEFAULT_LEADERBOARD];
+}
+
+function saveLeaderboard() {
+    try {
+        localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboardData));
+    } catch (e) {
+        console.error('Gagal menyimpan papan pendahulu:', e);
+    }
+}
+
+let leaderboardData = loadLeaderboard();
+
+function renderLeaderboard() {
+    const list = document.getElementById('leaderboard-list');
+    list.innerHTML = '';
+
+    if (leaderboardData.length === 0) {
+        const li = document.createElement('li');
+        li.classList.add('leaderboard-empty');
+        li.textContent = 'Belum ada skor. Jadilah yang pertama!';
+        list.appendChild(li);
+        return;
+    }
+
+    const sorted = [...leaderboardData].sort((a, b) => b.score - a.score).slice(0, 10);
+    sorted.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.classList.add('leaderboard-item');
+        li.innerHTML = `<span class="rank">${index + 1}.</span> ${escapeHtml(entry.name)}<span>${entry.score} mata</span>`;
+        list.appendChild(li);
+    });
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function addScoreToLeaderboard(name, finalScore) {
+    const cleanName = (name || '').trim() || 'Pemain';
+    leaderboardData.push({ name: cleanName, score: finalScore });
+    saveLeaderboard();
+    renderLeaderboard();
+}
+
+function clearLeaderboard() {
+    if (confirm('Padam semua skor dalam papan pendahulu?')) {
+        leaderboardData = [];
+        saveLeaderboard();
+        renderLeaderboard();
+    }
+}
+
+// ELEMEN DOM
+const scoreDisplay = document.getElementById('score');
+const livesDisplay = document.getElementById('lives');
+const emojiDisplay = document.getElementById('emoji-display');
+const spellInput = document.getElementById('spell-input');
+const optionsContainer = document.getElementById('options-container');
+const timerBar = document.getElementById('timer-bar');
+const customModal = document.getElementById('custom-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+const modalNameInput = document.getElementById('modal-name-input');
+
+// --- FUNGSI TUKAR LEVEL ---
+function changeLevel(levelNumber) {
+    currentLevel = levelNumber;
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById('btn-lvl' + i).classList.remove('active');
+    }
+    document.getElementById('btn-lvl' + levelNumber).classList.add('active');
+    if (levelNumber === 1) currentLevelData = level1Data;
+    else if (levelNumber === 2) currentLevelData = level2Data;
+    else if (levelNumber === 3) currentLevelData = level3Data;
+    resetGame();
+}
+
+// --- FUNGSI JANA SOALAN BARU ---
+function generateNewQuestion() {
+    if (timer) clearInterval(timer);
+
+    // 1. Pilih satu soalan secara rawak dari kumpulan level aktif
+    currentQuestionItem = currentLevelData[Math.floor(Math.random() * currentLevelData.length)];
+    emojiDisplay.textContent = currentQuestionItem.emoji;
+
+    // 2. Kosongkan kotak input dan hadkan panjang mengikut perkataan jawapan
+    spellInput.value = '';
+    spellInput.maxLength = currentQuestionItem.word.length;
+    spellInput.disabled = false;
+
+    // 3. Bina set huruf pilihan: semua huruf unik dalam jawapan + huruf rawak sehingga cukup 6
+    let optionsSet = new Set(currentQuestionItem.word.split(''));
+    while (optionsSet.size < 6) {
+        let randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
+        optionsSet.add(randomLetter);
+    }
+    let shuffledOptions = Array.from(optionsSet).sort(() => Math.random() - 0.5);
+
+    // 4. Paparkan butang pilihan huruf
+    optionsContainer.innerHTML = '';
+    shuffledOptions.forEach(letter => {
+        const btn = document.createElement('button');
+        btn.classList.add('btn-option');
+        btn.textContent = letter;
+        btn.onclick = function() { appendLetter(letter); };
+        optionsContainer.appendChild(btn);
+    });
+
+    // 5. Set semula pemasa bar merah (masa lebih panjang untuk perkataan lebih panjang)
+    totalTime = Math.max(10, currentQuestionItem.word.length * 2);
+    timeLeft = totalTime;
+    timerBar.style.width = '100%';
+    timer = setInterval(runTimer, 100);
+
+    spellInput.focus();
+}
+
+function runTimer() {
+    timeLeft -= 0.1;
+    let percentage = (timeLeft / totalTime) * 100;
+    timerBar.style.width = percentage + '%';
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleWrongAnswer();
+    }
+}
+
+// --- FUNGSI KAWALAN INPUT EJAAN ---
+function appendLetter(letter) {
+    if (spellInput.disabled) return;
+    if (spellInput.value.length < currentQuestionItem.word.length) {
+        spellInput.value += letter;
+        checkIfComplete();
+    }
+}
+
+function backspaceLetter() {
+    if (spellInput.disabled) return;
+    spellInput.value = spellInput.value.slice(0, -1);
+}
+
+function clearInput() {
+    if (spellInput.disabled) return;
+    spellInput.value = '';
+}
+
+function checkIfComplete() {
+    if (spellInput.value.length === currentQuestionItem.word.length) {
+        checkAnswer();
+    }
+}
+
+// Benarkan pengguna menaip terus menggunakan papan kekunci
+spellInput.addEventListener('input', function() {
+    // Hanya benarkan huruf a-z dan tukar kepada huruf kecil
+    let cleaned = spellInput.value.toLowerCase().replace(/[^a-z]/g, '');
+    if (currentQuestionItem) {
+        cleaned = cleaned.slice(0, currentQuestionItem.word.length);
+    }
+    spellInput.value = cleaned;
+    checkIfComplete();
+});
+
+spellInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        checkAnswer();
+    }
+});
+
+function checkAnswer() {
+    if (!currentQuestionItem) return;
+    clearInterval(timer);
+    const guess = spellInput.value.toLowerCase();
+    if (guess === currentQuestionItem.word) {
+        score += 15;
+        scoreDisplay.textContent = score;
+        generateNewQuestion();
+    } else {
+        handleWrongAnswer();
+    }
+}
+
+function handleWrongAnswer() {
+    spellInput.disabled = true;
+    lives--;
+    let hearts = '';
+    for (let i = 0; i < lives; i++) {
+        hearts += '❤️';
+    }
+    livesDisplay.textContent = hearts;
+
+    if (lives > 0) {
+        showModal('Alamak! ❌', 'Ejaan kurang tepat. Jawapan yang betul ialah "' + currentQuestionItem.word + '". Sila cuba lagi!', function() {
+            generateNewQuestion();
+        }, false);
+    } else {
+        showModal('Game Over! 🏁', 'Nyawa anda telah habis. Skor akhir anda: ' + score + ' mata. Masukkan nama anda untuk masuk papan pendahulu:', function() {
+            addScoreToLeaderboard(modalNameInput.value, score);
+            resetGame();
+        }, true);
+    }
+}
+
+function resetGame() {
+    score = 0;
+    lives = 3;
+    scoreDisplay.textContent = score;
+    livesDisplay.textContent = '❤️❤️❤️';
+    generateNewQuestion();
+}
+
+// --- LOGIK NOTIFIKASI MODAL TERSUAI ---
+function showModal(title, desc, callback, showNameInput) {
+    modalTitle.textContent = title;
+    modalDesc.textContent = desc;
+    onModalConfirm = callback;
+    if (showNameInput) {
+        modalNameInput.style.display = 'block';
+        modalNameInput.value = '';
+    } else {
+        modalNameInput.style.display = 'none';
+    }
+    customModal.classList.add('active');
+}
+
+function closeModal() {
+    customModal.classList.remove('active');
+    if (onModalConfirm) {
+        onModalConfirm();
+    }
+}
+
+// Jalankan permainan buat kali pertama secara automatik
+renderLeaderboard();
+generateNewQuestion();
+
+</script>
+</body>
+</html>
