@@ -251,12 +251,7 @@
         <ul class="leaderboard-list" id="leaderboard-list"></ul>
     </div>
     
-    <div class="modal-overlay" id="custom-modal">
-            <div class="modal-box">
-            <div class="modal-title" id="modal-title"></div>
-            <div class="modal-desc" id="modal-desc"></div>
-            <button class="btn-modal" onclick="closeModal()">OK</button></div>
-    </div>
+    
 </div>
 
 <script>
@@ -375,21 +370,10 @@ function gameOver() {
         scoreDisplay.textContent = score;livesDisplay.textContent = '❤️❤️❤️';
         generateNewQuestion();}
     
-    function renderLeaderboard() {
-        const list = document.getElementById('leaderboard-list');
-        list.innerHTML = '';
-        const sorted = [...leaderboardData].sort((a, b) => b.score - a.score).slice(0, 10); // top 10
-        sorted.forEach((entry, index) => {
-        const li = document.createElement('li');
-        li.classList.add('leaderboard-item');
-        li.innerHTML = `<span class="rank">${index + 1}.</span> ${entry.name}<span>${entry.score} mata</span>`;
-        list.appendChild(li);
-        });
-        }
-
+    
 
 // JALANKAN PERMAINAN SECARA TERUS (Mengelakkan isu sekatan onload browser)
-renderLeaderboard();
+
 generateNewQuestion();
 
 </script>
